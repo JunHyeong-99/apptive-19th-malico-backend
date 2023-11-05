@@ -24,7 +24,8 @@ public class Role {
     }
 
     public enum RoleName {
-        ROLE_USER,
+        ROLE_MEMBER,
+        ROLE_STYLIST,
         ROLE_ADMIN
     }
 
@@ -32,6 +33,7 @@ public class Role {
         return this.name.name();
     }
 
-    public static final Role ROLE_USER = new Role(RoleName.ROLE_USER);
+    public static final Role ROLE_USER = new Role(RoleName.ROLE_MEMBER);
     public static final Role ROLE_ADMIN = new Role(RoleName.ROLE_ADMIN);
+    public static final Role ROLE_STYLIST = new Role(RoleName.ROLE_STYLIST);
 }
