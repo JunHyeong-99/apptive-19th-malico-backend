@@ -50,7 +50,7 @@ public class Member implements UserDetails {
     @Column(nullable = false)
     private String residence;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String profileImage;
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
