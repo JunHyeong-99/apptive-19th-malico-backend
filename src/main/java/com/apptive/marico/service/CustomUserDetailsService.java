@@ -14,6 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 
+/**
+ * username을 가지고 사용자 정보를 조회하고 session에 저장될 사용자 주체 정보인 UserDetails를 반환하는 Interface
+ */
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
@@ -38,14 +41,4 @@ public class CustomUserDetailsService implements UserDetailsService {
             Collections.singleton(grantedAuthority)
         );
     }
-
-    /*
-    public MemberResponseDto findMemberInfoByUsername(String username) {
-        Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("유저 정보가 존재하지 않습니다"));
-
-        return MemberResponseDto.toDto(member);
-    }
-
-     */
 }

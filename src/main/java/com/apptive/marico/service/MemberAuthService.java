@@ -1,6 +1,6 @@
 package com.apptive.marico.service;
 
-import com.apptive.marico.dto.member.LoginDto;
+import com.apptive.marico.dto.LoginDto;
 import com.apptive.marico.dto.member.MemberRequestDto;
 import com.apptive.marico.dto.member.MemberResponseDto;
 import com.apptive.marico.dto.token.TokenRequestDto;
@@ -22,13 +22,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
 
-import static com.apptive.marico.entity.Role.RoleName.ROLE_USER;
+import static com.apptive.marico.entity.Role.RoleName.ROLE_MEMBER;
 import static com.apptive.marico.exception.ErrorCode.*;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class AuthService {
+public class MemberAuthService {
     private final MemberRepository memberRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
@@ -39,7 +39,7 @@ public class AuthService {
 
     @Transactional
     public MemberResponseDto signup(MemberRequestDto memberRequestDto) {
-        Role userRole = roleRepository.findByName(ROLE_USER).orElseThrow(
+        Role userRole = roleRepository.findByName(ROLE_MEMBER).orElseThrow(
                 () -> new CustomException(ROLE_NOT_FOUND));
 
         if (memberRepository.existsByUsername(memberRequestDto.getEmail())) {
