@@ -3,6 +3,7 @@ package com.apptive.marico.service;
 import com.apptive.marico.dto.member.LoginDto;
 import com.apptive.marico.dto.member.MemberRequestDto;
 import com.apptive.marico.dto.member.MemberResponseDto;
+import com.apptive.marico.dto.token.TokenRequestDto;
 import com.apptive.marico.dto.token.TokenResponseDto;
 import com.apptive.marico.entity.Member;
 import com.apptive.marico.entity.Role;
@@ -74,4 +75,14 @@ public class AuthService {
         // 5. 토큰 발급
         return tokenResDto;
     }
+
+    @Transactional
+    public void logout(TokenRequestDto tokenReqDto) {
+        // 로그아웃하려는 사용자의 정보를 가져옴
+        Authentication authentication = tokenProvider.getAuthentication(tokenReqDto.getAccessToken());
+
+        // 저장소에서 해당 사용자의 refresh token 삭제
+        refreshTokenRepository.deleteByKey(authentication.getName());
+    }
+
 }

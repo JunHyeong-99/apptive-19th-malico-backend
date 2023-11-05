@@ -3,6 +3,7 @@ package com.apptive.marico.controller;
 import com.apptive.marico.dto.member.LoginDto;
 import com.apptive.marico.dto.member.MemberRequestDto;
 import com.apptive.marico.dto.member.MemberResponseDto;
+import com.apptive.marico.dto.token.TokenRequestDto;
 import com.apptive.marico.dto.token.TokenResponseDto;
 import com.apptive.marico.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -23,5 +24,9 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(loginDto));
     }
 
-
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestBody TokenRequestDto requestDto) {
+        authService.logout(requestDto);
+        return ResponseEntity.ok().build();
+    }
 }
