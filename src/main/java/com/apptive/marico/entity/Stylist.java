@@ -54,6 +54,14 @@ public class Stylist implements UserDetails {
     @Column(nullable = true)
     private String profileImage;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "education_id")
+    private Education education;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "career_id")
+    private Career career;
+
     @OneToOne(mappedBy = "stylist", cascade = CascadeType.ALL)
     private VerificationToken verificationToken;
 
