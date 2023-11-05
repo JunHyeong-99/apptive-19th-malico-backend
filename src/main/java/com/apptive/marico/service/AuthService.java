@@ -6,9 +6,11 @@ import com.apptive.marico.dto.member.MemberResponseDto;
 import com.apptive.marico.dto.token.TokenResponseDto;
 import com.apptive.marico.entity.Member;
 import com.apptive.marico.entity.Role;
+import com.apptive.marico.entity.token.RefreshToken;
 import com.apptive.marico.exception.CustomException;
 import com.apptive.marico.jwt.TokenProvider;
 import com.apptive.marico.repository.MemberRepository;
+import com.apptive.marico.repository.RefreshTokenRepository;
 import com.apptive.marico.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,6 +32,10 @@ public class AuthService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
+    private final TokenProvider tokenProvider;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final RefreshTokenRepository refreshTokenRepository;
+
     @Transactional
     public MemberResponseDto signup(MemberRequestDto memberRequestDto) {
         Role userRole = roleRepository.findByName(ROLE_USER).orElseThrow(
@@ -43,5 +49,29 @@ public class AuthService {
         member.setRoles(Collections.singleton(userRole));
 
         return MemberResponseDto.toDto(memberRepository.save(member));
+    }
+
+    @Transactional
+    public TokenResponseDto login(LoginDto loginDto) {
+        // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
+        UsernamePasswordAuthenticationToken authenticationToken = loginDto.toAuthentication();
+
+        // 2. 실제로 검증 (사용자 비밀번호 체크) 이 이루어지는 부분
+        //    authenticate 메서드가 실행이 될 때 CustomUserDetailsService 에서 만들었던 loadUserByUsername 메서드가 실행됨
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        // 3. 인증 정보를 기반으로 JWT 토큰 생성
+        TokenResponseDto tokenResDto = tokenProvider.generateTokenDto(authentication);
+
+        // 4. RefreshToken 저장
+        RefreshToken refreshToken = RefreshToken.builder()
+                .key(authentication.getName())
+                .value(tokenResDto.getRefreshToken())
+                .build();
+
+        refreshTokenRepository.save(refreshToken);
+
+        // 5. 토큰 발급
+        return tokenResDto;
     }
 }

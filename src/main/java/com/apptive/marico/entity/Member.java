@@ -1,5 +1,6 @@
 package com.apptive.marico.entity;
 
+import com.apptive.marico.entity.token.VerificationToken;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

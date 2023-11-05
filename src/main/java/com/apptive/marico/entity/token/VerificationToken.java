@@ -1,6 +1,7 @@
-package com.apptive.marico.entity;
+package com.apptive.marico.entity.token;
 
 
+import com.apptive.marico.entity.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

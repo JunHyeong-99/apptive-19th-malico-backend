@@ -18,9 +18,9 @@ public class ExceptionHandlers {
     }
 
     @ExceptionHandler({ Exception.class })
-    protected ResponseEntity handleServerException(Exception ex) {
-        System.out.println(ex.getMessage());
-        ex.printStackTrace();
-        return new ResponseEntity(new UnknownErrorDto(INTERNAL_SERVER_ERROR.getStatus(), INTERNAL_SERVER_ERROR.getMessage(), ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+    protected ResponseEntity handleServerException(Exception exception) {
+        System.out.println(exception.getMessage());
+        exception.printStackTrace();
+        return new ResponseEntity(new UnknownErrorDto(INTERNAL_SERVER_ERROR.getStatus(), INTERNAL_SERVER_ERROR.getMessage(), exception.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
