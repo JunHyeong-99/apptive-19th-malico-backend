@@ -2,7 +2,9 @@ package com.apptive.marico.service;
 
 import com.apptive.marico.dto.member.MemberResponseDto;
 import com.apptive.marico.entity.Member;
+import com.apptive.marico.entity.Stylist;
 import com.apptive.marico.repository.MemberRepository;
+import com.apptive.marico.repository.StylistRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.Optional;
 
 /**
  * username을 가지고 사용자 정보를 조회하고 session에 저장될 사용자 주체 정보인 UserDetails를 반환하는 Interface
@@ -22,10 +25,21 @@ import java.util.Collections;
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
+    private final StylistRepository stylistRepository;
+
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<Member> memberOptional = memberRepository.findByUsername(username);
+        Optional<Stylist> stylistOptional = stylistRepository.findByUsername(username);
+        if (memberOptional.isPresent()) {
+            return createUserDetails(memberOptional.get());
+        } else if (stylistOptional.isPresent()) {
+            return createUserDetails(stylistOptional.get());
+        } else {
+            throw new UsernameNotFoundException(username + " -> 데이터베이스에서 찾을 수 없습니다.");
+        }
         return memberRepository.findByUsername(username)
             .map(this::createUserDetails)
             .orElseThrow(() -> new UsernameNotFoundException(username + " -> 데이터베이스에서 찾을 수 없습니다."));
@@ -41,4 +55,14 @@ public class CustomUserDetailsService implements UserDetailsService {
             Collections.singleton(grantedAuthority)
         );
     }
+
+    private UserDetails createUserDetails(Stylist stylist) {
+        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(stylist.getAuthorities().toString());
+        return new org.springframework.security.core.userdetails.User(
+                stylist.getUsername(),
+                stylist.getPassword(),
+                Collections.singleton(grantedAuthority)
+        );
+    }
+
 }
