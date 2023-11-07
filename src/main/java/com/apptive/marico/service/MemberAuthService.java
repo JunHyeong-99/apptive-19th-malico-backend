@@ -42,7 +42,7 @@ public class MemberAuthService {
         Role userRole = roleRepository.findByName(ROLE_MEMBER).orElseThrow(
                 () -> new CustomException(ROLE_NOT_FOUND));
 
-        if (memberRepository.existsByUsername(memberRequestDto.getEmail())) {
+        if (memberRepository.existsByUserId(memberRequestDto.getEmail())) {
             throw new CustomException(ALREADY_SAVED_EMAIL);
         }
 

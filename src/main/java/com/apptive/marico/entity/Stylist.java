@@ -34,7 +34,10 @@ public class Stylist implements UserDetails {
 
     // 이메일
     @Column(updatable = false,unique = true,nullable = false)
-    private String username;
+    private String email;
+
+    @Column(updatable = false, unique = true, nullable = false)
+    private String userId;
 
     @Column(nullable = false)
     private String password;
@@ -86,7 +89,7 @@ public class Stylist implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.username;
+        return this.userId;
     }
 //    GrantedAuthority 객체를 생성할 때 문자열 변환이 필요하지 않기 때문에 유연성이 높아지며, roles 필드를 추가적으로 변경해야 할 경우, 해당 필드만 수정하면 되므로 유지보수가 용이
 

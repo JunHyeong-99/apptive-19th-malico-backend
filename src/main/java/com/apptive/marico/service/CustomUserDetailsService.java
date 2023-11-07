@@ -29,15 +29,15 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Member> memberOptional = memberRepository.findByUsername(username);
-        Optional<Stylist> stylistOptional = stylistRepository.findByUsername(username);
+    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+        Optional<Member> memberOptional = memberRepository.findByUserId(userId);
+        Optional<Stylist> stylistOptional = stylistRepository.findByUserId(userId);
         if (memberOptional.isPresent()) {
             return createUserDetails(memberOptional.get());
         } else if (stylistOptional.isPresent()) {
             return createUserDetails(stylistOptional.get());
         } else {
-            throw new UsernameNotFoundException(username + " -> 데이터베이스에서 찾을 수 없습니다.");
+            throw new UsernameNotFoundException(userId + " -> 데이터베이스에서 찾을 수 없습니다.");
         }
     }
 

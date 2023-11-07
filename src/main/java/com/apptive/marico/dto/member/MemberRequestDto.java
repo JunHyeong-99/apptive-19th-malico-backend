@@ -14,6 +14,7 @@ import java.time.LocalDate;
 public class MemberRequestDto {
 
     private String name;
+    private String userId;
     private String email;
     private String password;
 
@@ -29,7 +30,8 @@ public class MemberRequestDto {
     public Member toMember(PasswordEncoder passwordEncoder) {
         return Member.builder()
                 .name(name)
-                .username(email)
+                .userId(userId)
+                .email(email)
                 .password(passwordEncoder.encode(password))
                 .nickname(nickname)
                 .gender(gender)

@@ -15,6 +15,7 @@ import java.time.LocalDate;
 public class StylistRequestDto {
 
     private String name;
+    private String userId;
     private String email;
     private String password;
 
@@ -30,7 +31,8 @@ public class StylistRequestDto {
     public Stylist toStylist(PasswordEncoder passwordEncoder) {
         return Stylist.builder()
                 .name(name)
-                .username(email)
+                .userId(userId)
+                .email(email)
                 .password(passwordEncoder.encode(password))
                 .nickname(nickname)
                 .gender(gender)

@@ -46,7 +46,7 @@ public class StylistAuthService {
         Role userRole = roleRepository.findByName(ROLE_STYLIST).orElseThrow(
                 () -> new CustomException(ROLE_NOT_FOUND));
 
-        if (stylistRepository.existsByUsername(stylistRequestDto.getEmail())) {
+        if (stylistRepository.existsByUserId(stylistRequestDto.getEmail())) {
             throw new CustomException(ALREADY_SAVED_EMAIL);
         }
 
