@@ -65,8 +65,6 @@ public class Stylist implements UserDetails {
     @JoinColumn(name = "career_id")
     private Career career;
 
-    @OneToOne(mappedBy = "stylist", cascade = CascadeType.ALL)
-    private VerificationToken verificationToken;
 
     @Column(nullable = false)
     private boolean enabled;
