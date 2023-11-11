@@ -1,10 +1,13 @@
-package com.apptive.marico.controller;
+package com.apptive.marico.controller.auth;
 
 
+import com.apptive.marico.dto.LoginDto;
 import com.apptive.marico.dto.finId.UserFindIdResponseDto;
 import com.apptive.marico.dto.findPwd.ChangePwdResponseDto;
 import com.apptive.marico.dto.findPwd.NewPwdRequestDto;
 import com.apptive.marico.dto.finId.SendEmailRequestDto;
+import com.apptive.marico.dto.token.TokenRequestDto;
+import com.apptive.marico.dto.token.TokenResponseDto;
 import com.apptive.marico.dto.verificationToken.VerificationTokenRequestDto;
 import com.apptive.marico.entity.Member;
 import com.apptive.marico.entity.Stylist;
@@ -12,6 +15,7 @@ import com.apptive.marico.repository.MemberRepository;
 import com.apptive.marico.repository.StylistRepository;
 import com.apptive.marico.service.MemberAuthService;
 import com.apptive.marico.service.StylistAuthService;
+import com.apptive.marico.service.UserAuthService;
 import com.apptive.marico.service.VerificationTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,6 +36,19 @@ public class UserAuthController {
     private final MemberRepository memberRepository;
     private final StylistAuthService stylistAuthService;
     private final MemberAuthService memberAuthService;
+    private final UserAuthService userAuthService;
+
+    @PostMapping("/login")
+    public ResponseEntity<TokenResponseDto> login(@RequestBody LoginDto loginDto) {
+        return ResponseEntity.ok(userAuthService.login(loginDto));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestBody TokenRequestDto requestDto) {
+        userAuthService.logout(requestDto);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/send-email")
     public ResponseEntity<String> sendEmail(@RequestBody SendEmailRequestDto sendEmailRequestDto) {
         String email = sendEmailRequestDto.getEmail();

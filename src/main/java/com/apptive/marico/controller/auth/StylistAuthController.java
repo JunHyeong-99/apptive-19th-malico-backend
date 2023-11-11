@@ -1,4 +1,4 @@
-package com.apptive.marico.controller;
+package com.apptive.marico.controller.auth;
 
 import com.apptive.marico.dto.LoginDto;
 import com.apptive.marico.dto.member.MemberRequestDto;
@@ -23,10 +23,5 @@ public class StylistAuthController {
     @PostMapping("/signup")
     public ResponseEntity<StylistResponseDto> signup(@RequestBody StylistRequestDto stylistRequestDto) {
         return ResponseEntity.ok(stylistAuthService.signup(stylistRequestDto));
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<TokenResponseDto> login(@RequestBody LoginDto loginDto) {
-        return ResponseEntity.ok(stylistAuthService.login(loginDto));
     }
 }

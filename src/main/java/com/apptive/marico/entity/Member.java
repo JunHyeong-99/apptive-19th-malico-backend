@@ -57,8 +57,6 @@ public class Member implements UserDetails {
     @Column(nullable = true)
     private String profileImage;
 
-    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
-    private VerificationToken verificationToken;
 
     @Column(nullable = false)
     private boolean enabled;

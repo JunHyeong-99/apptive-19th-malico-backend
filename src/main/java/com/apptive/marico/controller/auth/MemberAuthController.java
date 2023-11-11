@@ -1,4 +1,4 @@
-package com.apptive.marico.controller;
+package com.apptive.marico.controller.auth;
 
 import com.apptive.marico.dto.LoginDto;
 import com.apptive.marico.dto.member.MemberRequestDto;
@@ -14,20 +14,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth/member")
 @RequiredArgsConstructor
 public class MemberAuthController {
-    private final MemberAuthService authService;
+    private final MemberAuthService memberAuthService;
     @PostMapping("/signup")
     public ResponseEntity<MemberResponseDto> signup(@RequestBody MemberRequestDto memberRequestDto) {
-        return ResponseEntity.ok(authService.signup(memberRequestDto));
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<TokenResponseDto> login(@RequestBody LoginDto loginDto) {
-        return ResponseEntity.ok(authService.login(loginDto));
-    }
-
-    @PostMapping("/logout")
-    public ResponseEntity<?> logout(@RequestBody TokenRequestDto requestDto) {
-        authService.logout(requestDto);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(memberAuthService.signup(memberRequestDto));
     }
 }
