@@ -4,7 +4,6 @@ import com.apptive.marico.entity.Member;
 import lombok.*;
 
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

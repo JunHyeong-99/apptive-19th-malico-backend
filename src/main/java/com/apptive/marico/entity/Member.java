@@ -11,9 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
@@ -53,6 +51,9 @@ public class Member implements UserDetails {
 
     @Column(nullable = true)
     private String profileImage;
+
+    @OneToMany(mappedBy = "member")
+    private List<Like> likes = new ArrayList<>();
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private VerificationToken verificationToken;

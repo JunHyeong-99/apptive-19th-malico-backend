@@ -12,6 +12,7 @@ public enum ErrorCode {
     //404 NOT_FOUND 잘못된 리소스 접근
     EMAIL_NOT_FOUND(404, "존재하지 않는 이메일입니다."),
     USER_NOT_FOUND(404, "존재하지 않는 회원입니다."),
+    STYLIST_NOT_FOUND(404, "존재하지 않는 스타일리스트입니다."),
 
     //409 CONFLICT 중복된 리소스
     ALREADY_SAVED_EMAIL(409, "이미 저장된 이메일입니다."),
