@@ -17,7 +17,7 @@ public class MemberMypageService {
     private final MemberRepository memberRepository;
     @Transactional
     public MemberMypageDto mypage(String userId) {
-        Member member = memberRepository.findByUsername(userId).orElseThrow(
+        Member member = memberRepository.findByUserId(userId).orElseThrow(
                 () -> new CustomException(USER_NOT_FOUND));
         return MemberMypageDto.toDto(member);
     }
