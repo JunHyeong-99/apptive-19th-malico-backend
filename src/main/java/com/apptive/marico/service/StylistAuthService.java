@@ -1,6 +1,7 @@
 package com.apptive.marico.service;
 
 import com.apptive.marico.dto.LoginDto;
+import com.apptive.marico.dto.finId.UserFindIdResponseDto;
 import com.apptive.marico.dto.member.MemberResponseDto;
 import com.apptive.marico.dto.stylist.StylistRequestDto;
 import com.apptive.marico.dto.stylist.StylistResponseDto;
@@ -10,11 +11,13 @@ import com.apptive.marico.entity.Member;
 import com.apptive.marico.entity.Role;
 import com.apptive.marico.entity.Stylist;
 import com.apptive.marico.entity.token.RefreshToken;
+import com.apptive.marico.entity.token.VerificationToken;
 import com.apptive.marico.exception.CustomException;
 import com.apptive.marico.jwt.TokenProvider;
 import com.apptive.marico.repository.RefreshTokenRepository;
 import com.apptive.marico.repository.RoleRepository;
 import com.apptive.marico.repository.StylistRepository;
+import com.apptive.marico.repository.VerificationTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -23,14 +26,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.Optional;
 
 import static com.apptive.marico.entity.Role.RoleName.ROLE_STYLIST;
 import static com.apptive.marico.exception.ErrorCode.ALREADY_SAVED_EMAIL;
 import static com.apptive.marico.exception.ErrorCode.ROLE_NOT_FOUND;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 public class StylistAuthService {
     private final StylistRepository stylistRepository;
@@ -40,13 +45,14 @@ public class StylistAuthService {
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final VerificationTokenRepository verificationTokenRepository;
 
     @Transactional
     public StylistResponseDto signup(StylistRequestDto stylistRequestDto) {
         Role userRole = roleRepository.findByName(ROLE_STYLIST).orElseThrow(
                 () -> new CustomException(ROLE_NOT_FOUND));
 
-        if (stylistRepository.existsByUsername(stylistRequestDto.getEmail())) {
+        if (stylistRepository.existsByUserId(stylistRequestDto.getEmail())) {
             throw new CustomException(ALREADY_SAVED_EMAIL);
         }
 
@@ -81,4 +87,20 @@ public class StylistAuthService {
         // 5. 토큰 발급
         return tokenResDto;
     }
+
+
+    public String changePassword(Stylist stylist,String password, String code) throws Exception{
+        VerificationToken verificationToken = verificationTokenRepository.findByVerificationCode(code);
+        if (verificationToken == null) return "인증번호가 일치하지 않습니다.";
+        if(!verificationToken.getExpiryDate().isAfter(LocalDateTime.now())) {
+            verificationTokenRepository.delete(verificationToken);
+            return "인증 시간이 초과 되었습니다.";
+        }
+        if(stylist == null) throw new Exception("changePassword(),stylist가 조회되지 않음");
+        stylist.setPassword(passwordEncoder.encode(password));
+        verificationTokenRepository.delete(verificationToken);
+        stylistRepository.save(stylist);
+        return "비밀 번호가 변경 되었습니다.";
+    }
+
 }

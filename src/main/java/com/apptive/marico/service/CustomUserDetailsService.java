@@ -27,33 +27,29 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final MemberRepository memberRepository;
     private final StylistRepository stylistRepository;
 
-
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // 동시에 두 타입의 사용자를 찾기
-        Optional<UserDetails> memberUserDetails = memberRepository.findByUsername(username)
-                .map(this::createUserDetails);
-        Optional<UserDetails> stylistUserDetails = stylistRepository.findByUsername(username)
-                .map(this::createUserDetails);
-
-        // Member가 존재하면 Member 반환, 아니면 Stylist 확인
-        return memberUserDetails.orElseGet(() -> stylistUserDetails.orElseThrow(() ->
-                new UsernameNotFoundException(username + " -> 데이터베이스에서 찾을 수 없습니다.")));
+    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+        Optional<Member> memberOptional = memberRepository.findByUserId(userId);
+        Optional<Stylist> stylistOptional = stylistRepository.findByUserId(userId);
+        if (memberOptional.isPresent()) {
+            return createUserDetails(memberOptional.get());
+        } else if (stylistOptional.isPresent()) {
+            return createUserDetails(stylistOptional.get());
+        } else {
+            throw new UsernameNotFoundException(userId + " -> 데이터베이스에서 찾을 수 없습니다.");
+        }
     }
-
 
     // DB 에 Member 값이 존재한다면 UserDetails 객체로 만들어서 리턴
     private UserDetails createUserDetails(Member member) {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(member.getAuthorities().toString());
-
         return new org.springframework.security.core.userdetails.User(
             member.getUsername(),
             member.getPassword(),
             Collections.singleton(grantedAuthority)
         );
     }
-
     private UserDetails createUserDetails(Stylist stylist) {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(stylist.getAuthorities().toString());
         return new org.springframework.security.core.userdetails.User(
@@ -62,5 +58,4 @@ public class CustomUserDetailsService implements UserDetailsService {
                 Collections.singleton(grantedAuthority)
         );
     }
-
 }

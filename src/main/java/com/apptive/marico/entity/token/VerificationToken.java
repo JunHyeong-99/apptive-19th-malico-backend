@@ -27,13 +27,6 @@ public class VerificationToken {
 
     private String verificationCode;
     private LocalDateTime expiryDate;
-
-    @OneToOne(targetEntity = Member.class, fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, name = "member_id")
-    private Member member;
-
-    @OneToOne(targetEntity = Stylist.class, fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, name = "stylist_id")
-    private Stylist stylist;
+    private String UserId;
 
 }

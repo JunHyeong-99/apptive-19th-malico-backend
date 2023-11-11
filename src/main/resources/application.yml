@@ -20,7 +20,18 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
         show_sql: true
-
+  ## Email Send Configuration_SMTP
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: "apptivemarico@gmail.com"
+    password: "nytd pitq nvgb nhym"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 logging:
   level:
     root: INFO
