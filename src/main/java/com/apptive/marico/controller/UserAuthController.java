@@ -6,7 +6,6 @@ import com.apptive.marico.dto.findPwd.ChangePwdResponseDto;
 import com.apptive.marico.dto.findPwd.NewPwdRequestDto;
 import com.apptive.marico.dto.findId.SendEmailRequestDto;
 import com.apptive.marico.dto.verificationToken.SendEmailResponseDto;
-import com.apptive.marico.dto.verificationToken.VerificationTokenRequestDto;
 import com.apptive.marico.dto.verificationToken.VerificationTokenResponseDto;
 import com.apptive.marico.entity.Member;
 import com.apptive.marico.entity.Stylist;
@@ -34,7 +33,18 @@ public class UserAuthController {
     private final MemberRepository memberRepository;
     private final StylistAuthService stylistAuthService;
     private final MemberAuthService memberAuthService;
-    @PostMapping("/find/send-email")
+
+
+    @PostMapping("/sign/verification-code")
+    public ResponseEntity<SendEmailResponseDto> sendEmailForSign(@RequestBody SendEmailRequestDto sendEmailRequestDto) {
+        String email = sendEmailRequestDto.getEmail();
+        return ResponseEntity.ok(new SendEmailResponseDto(verificationTokenService.createVerificationTokenForSign(email)));
+    }
+    @GetMapping("/sign/verification-code")
+    public ResponseEntity<VerificationTokenResponseDto> checkCodeForSign(@RequestParam String code) {
+        return ResponseEntity.ok(new VerificationTokenResponseDto(verificationTokenService.verifyUserEmailForSign(code)));
+    }
+    @PostMapping("/search/verification-code")
     public ResponseEntity<SendEmailResponseDto> sendEmailForFind(@RequestBody SendEmailRequestDto sendEmailRequestDto) {
         String email = sendEmailRequestDto.getEmail();
         try {
@@ -44,37 +54,17 @@ public class UserAuthController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new SendEmailResponseDto( "오류가 발생했습니다: " + e.getMessage()));
         }
     }
-
-    @PostMapping("/sign/send-email")
-    public ResponseEntity<SendEmailResponseDto> sendEmailForSign(@RequestBody SendEmailRequestDto sendEmailRequestDto) {
-        String email = sendEmailRequestDto.getEmail();
-
-        try {
-            return ResponseEntity.ok(new SendEmailResponseDto(verificationTokenService.createVerificationTokenForSign(email)));
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new SendEmailResponseDto("오류가 발생했습니다: " + e.getMessage()));
-        }
-    }
-    @PostMapping("/find-id/check-code")
-    public ResponseEntity<VerificationTokenResponseDto> checkCodeForId(@RequestBody VerificationTokenRequestDto verificationTokenRequestDto) {
-        return ResponseEntity.ok(new VerificationTokenResponseDto(verificationTokenService.verifyUserEmailForIdOrPwd(verificationTokenRequestDto.getCode())));
+    @GetMapping("/search/verification-code")
+    public ResponseEntity<VerificationTokenResponseDto> checkCodeForIdOrPwd(@RequestParam String code) {
+        return ResponseEntity.ok(new VerificationTokenResponseDto(verificationTokenService.verifyUserEmailForIdOrPwd(code)));
     }
 
-    @PostMapping("/check-id")
-    public ResponseEntity<UserFindIdResponseDto> checkId(@RequestBody VerificationTokenRequestDto verificationTokenRequestDto) {
-        return ResponseEntity.ok(verificationTokenService.returnUserId(verificationTokenRequestDto.getCode()));
-    }
-    @PostMapping("/sign/check-code")
-    public ResponseEntity<VerificationTokenResponseDto> checkCodeForSign(@RequestBody VerificationTokenRequestDto verificationTokenRequestDto) {
-        return ResponseEntity.ok(new VerificationTokenResponseDto(verificationTokenService.verifyUserEmailForSign(verificationTokenRequestDto.getCode())));
-    }
-    @PostMapping("/change-pwd/check-code")
-    public ResponseEntity<VerificationTokenResponseDto> checkCodeForPwd(@RequestBody VerificationTokenRequestDto verificationTokenRequestDto) {
-        return ResponseEntity.ok(new VerificationTokenResponseDto(verificationTokenService.verifyUserEmailForIdOrPwd(verificationTokenRequestDto.getCode())));
+    @GetMapping("/search/id")
+    public ResponseEntity<UserFindIdResponseDto> returnId(@RequestParam String code) {
+        return ResponseEntity.ok(verificationTokenService.returnUserId(code));
     }
 
-    @PostMapping("/change-pwd")
+    @PatchMapping("/search/password")
     public ResponseEntity<ChangePwdResponseDto> checkCodeForPwd(@RequestBody NewPwdRequestDto newPwdRequestDto) throws Exception {
         Optional<Stylist> findStylist = stylistRepository.findByUserId(newPwdRequestDto.getUserId());
         Optional<Member> findMember = memberRepository.findByUserId(newPwdRequestDto.getUserId());

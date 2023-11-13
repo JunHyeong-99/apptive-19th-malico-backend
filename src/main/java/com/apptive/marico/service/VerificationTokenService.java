@@ -95,6 +95,7 @@ public class VerificationTokenService {
 
         if (checkToken(verificationToken)) {
             verificationToken.setExpiryDate(LocalDateTime.now().plusMinutes(30));
+            verificationTokenRepository.save(verificationToken);
             return true;
         }
         else return false;
