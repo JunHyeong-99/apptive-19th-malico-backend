@@ -1,13 +1,9 @@
 package com.apptive.marico.service;
 
 import com.apptive.marico.dto.LoginDto;
-import com.apptive.marico.dto.finId.UserFindIdResponseDto;
-import com.apptive.marico.dto.member.MemberResponseDto;
 import com.apptive.marico.dto.stylist.StylistRequestDto;
 import com.apptive.marico.dto.stylist.StylistResponseDto;
-import com.apptive.marico.dto.token.TokenRequestDto;
 import com.apptive.marico.dto.token.TokenResponseDto;
-import com.apptive.marico.entity.Member;
 import com.apptive.marico.entity.Role;
 import com.apptive.marico.entity.Stylist;
 import com.apptive.marico.entity.token.RefreshToken;
@@ -28,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Optional;
 
 import static com.apptive.marico.entity.Role.RoleName.ROLE_STYLIST;
 import static com.apptive.marico.exception.ErrorCode.ALREADY_SAVED_EMAIL;

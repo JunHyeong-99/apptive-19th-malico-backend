@@ -1,5 +1,4 @@
-package com.apptive.marico.dto.finId;
-
+package com.apptive.marico.dto.findId;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +9,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
-public class SendEmailRequestDto {
-    private String email;
+public class UserFindIdResponseDto {
+    private String message;
 }

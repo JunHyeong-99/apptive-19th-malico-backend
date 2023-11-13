@@ -1,4 +1,4 @@
-package com.apptive.marico.dto.finId;
+package com.apptive.marico.dto.verificationToken;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserFindIdResponseDto {
+public class SendEmailResponseDto {
     private String message;
 }
