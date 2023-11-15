@@ -1,4 +1,4 @@
-package com.apptive.marico.dto.finId;
+package com.apptive.marico.dto.findId;
 
 
 import lombok.AllArgsConstructor;
