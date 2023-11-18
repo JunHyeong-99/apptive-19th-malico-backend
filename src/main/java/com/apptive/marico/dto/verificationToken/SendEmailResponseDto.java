@@ -1,6 +1,5 @@
 package com.apptive.marico.dto.verificationToken;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +9,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class VerificationTokenRequestDto {
-    private String code;
+public class SendEmailResponseDto {
+    private String message;
 }
