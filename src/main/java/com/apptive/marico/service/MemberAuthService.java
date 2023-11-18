@@ -40,14 +40,15 @@ public class MemberAuthService {
 
     private final VerificationTokenRepository verificationTokenRepository;
 
+    private final CustomUserDetailsService customUserDetailsService;
+
     @Transactional
     public MemberResponseDto signup(MemberRequestDto memberRequestDto) {
+
+        customUserDetailsService.checkEmailAvailability(memberRequestDto.getEmail());
+
         Role userRole = roleRepository.findByName(ROLE_MEMBER).orElseThrow(
                 () -> new CustomException(ROLE_NOT_FOUND));
-
-        if (memberRepository.existsByUserId(memberRequestDto.getEmail())) {
-            throw new CustomException(ALREADY_SAVED_EMAIL);
-        }
 
         Member member = memberRequestDto.toMember(passwordEncoder);
         member.setRoles(Collections.singleton(userRole));

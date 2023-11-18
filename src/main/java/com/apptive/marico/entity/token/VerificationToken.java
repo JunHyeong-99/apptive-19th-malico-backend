@@ -1,32 +1,45 @@
 package com.apptive.marico.entity.token;
 
 
-import com.apptive.marico.entity.Member;
-import com.apptive.marico.entity.Stylist;
+import com.apptive.marico.entity.UserType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 
-//사용하지 않는 방식
 @Entity
-@Data
-@Builder
-@AllArgsConstructor
+@Getter
 @NoArgsConstructor
 @Table(name = "verificationToken")
 public class VerificationToken {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String verificationCode;
     private LocalDateTime expiryDate;
-    private String UserId;
+    private String email;
 
+    public VerificationToken(String email) {
+        this.verificationCode = generateVerificationCode();
+        this.expiryDate = calculateExpiryDate();
+        this.email = email;
+    }
+
+    public static VerificationToken create(String email) {
+        return new VerificationToken(email);
+    }
+
+    private String generateVerificationCode() {
+        String verificationCode = UUID.randomUUID().toString();
+        verificationCode = verificationCode.replaceAll("-", "");
+        return verificationCode.substring(0, 6);
+    }
+
+    private LocalDateTime calculateExpiryDate() {
+        return LocalDateTime.now().plusMinutes(3);
+    }
 }
