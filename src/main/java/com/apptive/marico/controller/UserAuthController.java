@@ -1,10 +1,20 @@
 package com.apptive.marico.controller;
 
 
+<<<<<<< Updated upstream:src/main/java/com/apptive/marico/controller/UserAuthController.java
 import com.apptive.marico.dto.findId.UserFindIdResponseDto;
 import com.apptive.marico.dto.findPwd.ChangePwdResponseDto;
 import com.apptive.marico.dto.findPwd.NewPwdRequestDto;
 import com.apptive.marico.dto.findId.SendEmailRequestDto;
+=======
+import com.apptive.marico.dto.LoginDto;
+import com.apptive.marico.dto.findId.SendEmailRequestDto;
+import com.apptive.marico.dto.findId.UserFindIdResponseDto;
+import com.apptive.marico.dto.findPwd.ChangePwdResponseDto;
+import com.apptive.marico.dto.findPwd.NewPwdRequestDto;
+import com.apptive.marico.dto.token.TokenRequestDto;
+import com.apptive.marico.dto.token.TokenResponseDto;
+>>>>>>> Stashed changes:src/main/java/com/apptive/marico/controller/auth/UserAuthController.java
 import com.apptive.marico.dto.verificationToken.SendEmailResponseDto;
 import com.apptive.marico.dto.verificationToken.VerificationTokenResponseDto;
 import com.apptive.marico.entity.Member;
@@ -44,6 +54,19 @@ public class UserAuthController {
     public ResponseEntity<VerificationTokenResponseDto> checkCodeForSign(@RequestParam String code) {
         return ResponseEntity.ok(new VerificationTokenResponseDto(verificationTokenService.verifyUserEmailForSign(code)));
     }
+<<<<<<< Updated upstream:src/main/java/com/apptive/marico/controller/UserAuthController.java
+=======
+
+    @PostMapping("/sign/verification-code")
+    public ResponseEntity<SendEmailResponseDto> sendEmailForSign(@RequestBody SendEmailRequestDto sendEmailRequestDto) {
+        String email = sendEmailRequestDto.getEmail();
+        return ResponseEntity.ok(new SendEmailResponseDto(verificationTokenService.createVerificationTokenForSign(email)));
+    }
+    @GetMapping("/sign/verification-code")
+    public ResponseEntity<VerificationTokenResponseDto> checkCodeForSign(@RequestParam String code) {
+        return ResponseEntity.ok(new VerificationTokenResponseDto(verificationTokenService.verifyUserEmailForSign(code)));
+    }
+>>>>>>> Stashed changes:src/main/java/com/apptive/marico/controller/auth/UserAuthController.java
     @PostMapping("/search/verification-code")
     public ResponseEntity<SendEmailResponseDto> sendEmailForFind(@RequestBody SendEmailRequestDto sendEmailRequestDto) {
         String email = sendEmailRequestDto.getEmail();
