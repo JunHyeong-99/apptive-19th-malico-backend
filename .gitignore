@@ -20,3 +20,7 @@ gradle-app.setting
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+
+application-db.yml
+application-jwt-secret.yml
+aws.xml
