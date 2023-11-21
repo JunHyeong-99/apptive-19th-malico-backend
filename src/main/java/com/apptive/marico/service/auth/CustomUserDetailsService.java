@@ -1,7 +1,9 @@
-package com.apptive.marico.service;
+package com.apptive.marico.service.auth;
 
 import com.apptive.marico.dto.LoginDto;
+import com.apptive.marico.dto.member.MemberRequestDto;
 import com.apptive.marico.dto.member.MemberResponseDto;
+import com.apptive.marico.dto.stylist.StylistRequestDto;
 import com.apptive.marico.dto.token.TokenRequestDto;
 import com.apptive.marico.dto.token.TokenResponseDto;
 import com.apptive.marico.entity.Member;
@@ -26,9 +28,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import static com.apptive.marico.exception.ErrorCode.ALREADY_SAVED_EMAIL;
-import static com.apptive.marico.exception.ErrorCode.USER_NOT_FOUND;
+import static com.apptive.marico.exception.ErrorCode.*;
 
 /**
  * username을 가지고 사용자 정보를 조회하고 session에 저장될 사용자 주체 정보인 UserDetails를 반환하는 Interface
@@ -110,9 +113,55 @@ public class CustomUserDetailsService implements UserDetailsService {
         );
     }
 
-    public void checkEmailAvailability(String email) {
-        if (stylistRepository.existsByUserId(email) || memberRepository.existsByUserId(email)) {
+    public void checkAvailability(MemberRequestDto memberRequestDto) {
+        checkEmailAvailability(memberRequestDto.getEmail());
+        checkUserIdAvailability(memberRequestDto.getUserId());
+        checkPasswordAvailability(memberRequestDto.getPassword());
+        checkNicknameAvailability(memberRequestDto.getNickname());
+    }
+
+    public void checkAvailability(StylistRequestDto stylistRequestDto) {
+        checkEmailAvailability(stylistRequestDto.getEmail());
+        checkUserIdAvailability(stylistRequestDto.getUserId());
+        checkPasswordAvailability(stylistRequestDto.getPassword());
+        checkNicknameAvailability(stylistRequestDto.getNickname());
+    }
+
+    private void checkEmailAvailability(String email) {
+        if (stylistRepository.existsByEmail(email) || memberRepository.existsByEmail(email)) {
             throw new CustomException(ALREADY_SAVED_EMAIL);
+        }
+    }
+
+    private void checkUserIdAvailability(String userId) {
+        if (memberRepository.existsByUserId(userId) || stylistRepository.existsByUserId(userId)) {
+            throw new CustomException(ALREADY_SAVED_ID);
+        }
+
+        Pattern userIdPattern = Pattern.compile("^[a-z0-9]{6,20}$");
+        Matcher userIdMatcher = userIdPattern.matcher(userId);
+        if (!userIdMatcher.matches()) {
+            throw new CustomException(INVALID_ID);
+        }
+    }
+
+    private void checkPasswordAvailability(String password) {
+        Pattern passwordPattern = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{8,20}$");
+        Matcher passwordMatcher = passwordPattern.matcher(password);
+        if (!passwordMatcher.matches()) {
+            throw new CustomException(INVALID_PASSWORD);
+        }
+    }
+
+    private void checkNicknameAvailability(String nickname) {
+        if (memberRepository.existsByNickname(nickname) || stylistRepository.existsByNickname(nickname)) {
+            throw new CustomException(ALREADY_SAVED_NICKNAME);
+        }
+
+        Pattern nicknamePattern = Pattern.compile("^[가-힣a-z0-9]{2,10}$");
+        Matcher nicknameMatcher = nicknamePattern.matcher(nickname);
+        if (!nicknameMatcher.matches()) {
+            throw new CustomException(INVALID_NICKNAME);
         }
     }
 }

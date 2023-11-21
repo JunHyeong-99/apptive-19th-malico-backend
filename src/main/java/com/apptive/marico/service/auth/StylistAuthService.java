@@ -1,4 +1,4 @@
-package com.apptive.marico.service;
+package com.apptive.marico.service.auth;
 
 import com.apptive.marico.dto.findPwd.NewPwdRequestDto;
 import com.apptive.marico.dto.stylist.StylistRequestDto;
@@ -8,6 +8,7 @@ import com.apptive.marico.entity.Stylist;
 import com.apptive.marico.entity.token.VerificationToken;
 import com.apptive.marico.exception.CustomException;
 import com.apptive.marico.repository.*;
+import com.apptive.marico.service.VerificationTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,8 @@ public class StylistAuthService {
 
     @Transactional
     public StylistResponseDto signup(StylistRequestDto stylistRequestDto) {
-        customUserDetailsService.checkEmailAvailability(stylistRequestDto.getEmail());
+        customUserDetailsService.checkAvailability(stylistRequestDto);
+
 
         Role userRole = roleRepository.findByName(ROLE_STYLIST)
                 .orElseThrow(() -> new CustomException(ROLE_NOT_FOUND));
