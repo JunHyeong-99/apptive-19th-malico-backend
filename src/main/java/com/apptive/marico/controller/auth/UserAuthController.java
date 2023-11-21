@@ -2,7 +2,6 @@ package com.apptive.marico.controller.auth;
 
 
 import com.apptive.marico.dto.LoginDto;
-import com.apptive.marico.dto.findId.UserFindIdResponseDto;
 import com.apptive.marico.dto.token.TokenRequestDto;
 import com.apptive.marico.dto.token.TokenResponseDto;
 import com.apptive.marico.dto.findPwd.ChangePwdResponseDto;
@@ -21,7 +20,6 @@ import com.apptive.marico.service.UserAuthService;
 import com.apptive.marico.service.VerificationTokenService;
 import com.apptive.marico.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -72,7 +70,6 @@ public class UserAuthController {
 //    public ResponseEntity<VerificationTokenResponseDto> checkCodeForIdOrPwd(@RequestParam String code) {
 //        return ResponseEntity.ok(new VerificationTokenResponseDto(verificationTokenService.verifyUserEmailForIdOrPwd(code)));
 //    }
-
     @GetMapping("/search/id")
     public ResponseEntity<?> returnId(@RequestParam String code) {
         return ResponseEntity.ok(ApiUtils.success(verificationTokenService.returnUserEmail(code)));
@@ -80,8 +77,8 @@ public class UserAuthController {
 
     @PatchMapping("/search/password") //Restful 한 Url 설계가 필요해보입니다!
     public ResponseEntity<?> checkCodeForPwd(@RequestBody NewPwdRequestDto newPwdRequestDto) throws Exception {
-        Optional<Stylist> stylist = stylistRepository.findByEmail(newPwdRequestDto.getUserEmail());
-        Optional<Member> member = memberRepository.findByEmail(newPwdRequestDto.getUserEmail());
+        Optional<Stylist> stylist = stylistRepository.findByUserId(newPwdRequestDto.getUserId());
+        Optional<Member> member = memberRepository.findByUserId(newPwdRequestDto.getUserId());
         if(stylist.isPresent()) {
             return ResponseEntity.ok(ApiUtils.success(stylistAuthService.changePassword(stylist.get() ,newPwdRequestDto)));
         }

@@ -1,22 +1,15 @@
 package com.apptive.marico.service;
 
 
-import com.apptive.marico.dto.findId.UserFindIdResponseDto;
-import com.apptive.marico.entity.Member;
-import com.apptive.marico.entity.Stylist;
-import com.apptive.marico.entity.UserType;
 import com.apptive.marico.entity.token.VerificationToken;
 import com.apptive.marico.exception.CustomException;
 import com.apptive.marico.repository.MemberRepository;
 import com.apptive.marico.repository.StylistRepository;
 import com.apptive.marico.repository.VerificationTokenRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.UUID;
 
 import static com.apptive.marico.exception.ErrorCode.*;
 
@@ -61,7 +54,7 @@ public class VerificationTokenService {
 
     }
 
-//    public boolean verifyUserEmailForIdOrPwd(String Code) {
+//    public boolean checkCode(String Code) {
 //        VerificationToken verificationToken = verificationTokenRepository.findByVerificationCode(Code);
 //
 //        if (checkToken(verificationToken)) {

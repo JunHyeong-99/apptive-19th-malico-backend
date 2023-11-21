@@ -1,26 +1,18 @@
 package com.apptive.marico.service;
 
-import com.apptive.marico.dto.LoginDto;
 import com.apptive.marico.dto.findPwd.NewPwdRequestDto;
 import com.apptive.marico.dto.stylist.StylistRequestDto;
 import com.apptive.marico.dto.stylist.StylistResponseDto;
-import com.apptive.marico.dto.token.TokenResponseDto;
 import com.apptive.marico.entity.Role;
 import com.apptive.marico.entity.Stylist;
-import com.apptive.marico.entity.token.RefreshToken;
 import com.apptive.marico.entity.token.VerificationToken;
 import com.apptive.marico.exception.CustomException;
-import com.apptive.marico.jwt.TokenProvider;
 import com.apptive.marico.repository.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 
 import static com.apptive.marico.entity.Role.RoleName.ROLE_STYLIST;
@@ -56,7 +48,7 @@ public class StylistAuthService {
 
     public String changePassword(Stylist stylist, NewPwdRequestDto newPwdRequestDto){
         VerificationToken verificationToken = verificationTokenRepository.findByVerificationCode(newPwdRequestDto.getCode());
-        if (!newPwdRequestDto.getUserEmail().equals(verificationTokenService.checkTokenAndGetEmail(verificationToken))){
+        if (!newPwdRequestDto.getUserId().equals(verificationTokenService.checkTokenAndGetEmail(verificationToken))){
             throw new CustomException(EMAIL_DOES_NOT_MATCH);
         }
         stylist.setPassword(passwordEncoder.encode(newPwdRequestDto.getPassword()));

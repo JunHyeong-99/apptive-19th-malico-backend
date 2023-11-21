@@ -46,9 +46,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String email) {
-        Optional<Member> memberOptional = memberRepository.findByEmail(email);
-        Optional<Stylist> stylistOptional = stylistRepository.findByEmail(email);
+    public UserDetails loadUserByUsername(String userId) {
+        Optional<Member> memberOptional = memberRepository.findByUserId(userId);
+        Optional<Stylist> stylistOptional = stylistRepository.findByUserId(userId);
         if (memberOptional.isPresent()) {
             return createUserDetails(memberOptional.get());
         } else if (stylistOptional.isPresent()) {
