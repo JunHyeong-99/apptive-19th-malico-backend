@@ -14,10 +14,7 @@ import com.apptive.marico.entity.Stylist;
 import com.apptive.marico.exception.CustomException;
 import com.apptive.marico.repository.MemberRepository;
 import com.apptive.marico.repository.StylistRepository;
-import com.apptive.marico.service.MemberAuthService;
-import com.apptive.marico.service.StylistAuthService;
-import com.apptive.marico.service.UserAuthService;
-import com.apptive.marico.service.VerificationTokenService;
+import com.apptive.marico.service.*;
 import com.apptive.marico.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -36,16 +33,16 @@ public class UserAuthController {
     private final MemberRepository memberRepository;
     private final StylistAuthService stylistAuthService;
     private final MemberAuthService memberAuthService;
-    private final UserAuthService userAuthService;
+    private final CustomUserDetailsService customUserDetailsService;
 
     @PostMapping("/login")
     public ResponseEntity<TokenResponseDto> login(@RequestBody LoginDto loginDto) {
-        return ResponseEntity.ok(userAuthService.login(loginDto));
+        return ResponseEntity.ok(customUserDetailsService.login(loginDto));
     }
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@RequestBody TokenRequestDto requestDto) {
-        userAuthService.logout(requestDto);
+        customUserDetailsService.logout(requestDto);
         return ResponseEntity.ok().build();
     }
 

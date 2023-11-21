@@ -48,13 +48,10 @@ public class Stylist implements UserDetails {
     @Column(nullable = false)
     private char gender;
 
-    @Column(nullable = false)
     private LocalDate birthDate;
 
-    @Column(nullable = false)
     private String residence;
 
-    @Column(nullable = true)
     private String profileImage;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
