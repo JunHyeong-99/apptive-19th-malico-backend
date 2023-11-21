@@ -67,7 +67,7 @@ public class VerificationTokenService {
 
     public boolean verifyUserEmailForSign(String token)  {
         VerificationToken verificationToken = verificationTokenRepository.findByVerificationCode(token);
-        return checkTokenAndGetEmail(verificationToken).isEmpty();
+        return !checkTokenAndGetEmail(verificationToken).isEmpty();
     }
 
 
