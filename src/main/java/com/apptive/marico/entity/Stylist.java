@@ -48,13 +48,10 @@ public class Stylist implements UserDetails {
     @Column(nullable = false)
     private char gender;
 
-    @Column(nullable = false)
     private LocalDate birthDate;
 
-    @Column(nullable = false)
     private String residence;
 
-    @Column(nullable = true)
     private String profileImage;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -87,7 +84,7 @@ public class Stylist implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.email;
+        return this.userId;
     }
 
     //    GrantedAuthority 객체를 생성할 때 문자열 변환이 필요하지 않기 때문에 유연성이 높아지며, roles 필드를 추가적으로 변경해야 할 경우, 해당 필드만 수정하면 되므로 유지보수가 용이

@@ -15,7 +15,7 @@ public class NewPwdRequestDto {
     @NotNull
     private String code;
     @NotNull
-    private String userEmail;
+    private String userId;
     private String password;
 
 }

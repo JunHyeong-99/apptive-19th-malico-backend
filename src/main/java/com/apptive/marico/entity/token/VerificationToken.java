@@ -1,7 +1,6 @@
 package com.apptive.marico.entity.token;
 
 
-import com.apptive.marico.entity.UserType;
 import jakarta.persistence.*;
 import lombok.*;
 

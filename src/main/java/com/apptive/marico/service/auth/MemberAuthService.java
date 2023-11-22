@@ -1,34 +1,27 @@
-package com.apptive.marico.service;
+package com.apptive.marico.service.auth;
 
-import com.apptive.marico.dto.LoginDto;
 import com.apptive.marico.dto.member.MemberRequestDto;
 import com.apptive.marico.dto.member.MemberResponseDto;
-import com.apptive.marico.dto.token.TokenRequestDto;
-import com.apptive.marico.dto.token.TokenResponseDto;
 import com.apptive.marico.entity.Member;
 import com.apptive.marico.entity.Role;
-import com.apptive.marico.entity.Stylist;
-import com.apptive.marico.entity.token.RefreshToken;
 import com.apptive.marico.entity.token.VerificationToken;
 import com.apptive.marico.exception.CustomException;
-import com.apptive.marico.jwt.TokenProvider;
 import com.apptive.marico.repository.MemberRepository;
-import com.apptive.marico.repository.RefreshTokenRepository;
 import com.apptive.marico.repository.RoleRepository;
 import com.apptive.marico.repository.VerificationTokenRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.apptive.marico.entity.Role.RoleName.ROLE_MEMBER;
 import static com.apptive.marico.exception.ErrorCode.*;
+import static com.apptive.marico.exception.ErrorCode.INVALID_NICKNAME;
 
 @Service
 @Transactional
@@ -44,11 +37,12 @@ public class MemberAuthService {
 
     @Transactional
     public MemberResponseDto signup(MemberRequestDto memberRequestDto) {
-
-        customUserDetailsService.checkEmailAvailability(memberRequestDto.getEmail());
+        // 유효성 검사
+        customUserDetailsService.checkAvailability(memberRequestDto);
 
         Role userRole = roleRepository.findByName(ROLE_MEMBER).orElseThrow(
                 () -> new CustomException(ROLE_NOT_FOUND));
+
 
         Member member = memberRequestDto.toMember(passwordEncoder);
         member.setRoles(Collections.singleton(userRole));

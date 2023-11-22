@@ -11,4 +11,5 @@ public interface StylistRepository extends JpaRepository<Stylist,Long> {
     Optional<Stylist> findByEmail(String email);
     boolean existsByUserId(String userId);
     boolean existsByEmail(String email);
+    boolean existsByNickname(String nickname);
 }

@@ -1,4 +1,4 @@
-package com.apptive.marico.service;
+package com.apptive.marico.service.auth;
 
 import com.apptive.marico.dto.LoginDto;
 import com.apptive.marico.dto.token.TokenRequestDto;
