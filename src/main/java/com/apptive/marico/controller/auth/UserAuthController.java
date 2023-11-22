@@ -49,41 +49,41 @@ public class UserAuthController {
         return ResponseEntity.ok().build();
     }
 
-    //TODO: 회원가입시 이메일 인증을 받는 로직이라면 추가적인 로직의 변형이 필요합니다.
     @PostMapping("/sign/verification-code")
     public ResponseEntity<SendEmailResponseDto> sendEmailForSign(@RequestBody SendEmailRequestDto sendEmailRequestDto) {
         String email = sendEmailRequestDto.getEmail();
         return ResponseEntity.ok(new SendEmailResponseDto(verificationTokenService.createVerificationTokenForSign(email)));
     }
     @GetMapping("/sign/verification-code")
-    public ResponseEntity<VerificationTokenResponseDto> checkCodeForSign(@RequestParam String code) {
-        return ResponseEntity.ok(new VerificationTokenResponseDto(verificationTokenService.verifyUserEmailForSign(code)));
+    public ResponseEntity<?> checkCodeForSign(@RequestParam String code) {
+        return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(verificationTokenService.verifyUserEmailForSign(code)));
     }
 
-    @PostMapping("/search/verification-code")
+    @PostMapping("/search/verification-code") // 찾기 기능 인증번호 생성
     public ResponseEntity<?> sendEmailForFind(@RequestBody SendEmailRequestDto sendEmailRequestDto) {
         String email = sendEmailRequestDto.getEmail();
         verificationTokenService.createVerificationToken(email);
         return ResponseEntity.ok(new ApiUtils.ApiSuccess<>("인증 번호가 전송 되었습니다."));
     }
-//    @GetMapping("/search/verification-code") //구현의 이유가 무엇인가요?
-//    public ResponseEntity<VerificationTokenResponseDto> checkCodeForIdOrPwd(@RequestParam String code) {
-//        return ResponseEntity.ok(new VerificationTokenResponseDto(verificationTokenService.verifyUserEmailForIdOrPwd(code)));
-//    }
-    @GetMapping("/search/id")
+
+    @GetMapping("/search/verification-code") // 인증코드 체크 인증 코드 확인 성공하고 다음 페이지 넘어가는 시간 30분 추가
+    public ResponseEntity<?> checkCodeForIdOrPwd(@RequestParam String code) {
+        return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(verificationTokenService.checkTokenAndSetExpiryDate(code)));
+    }
+    @GetMapping("/search/id") // 인증 코드 체크 후 아이디 리턴
     public ResponseEntity<?> returnId(@RequestParam String code) {
-        return ResponseEntity.ok(ApiUtils.success(verificationTokenService.returnUserEmail(code)));
+        return ResponseEntity.ok(ApiUtils.success(verificationTokenService.returnUserId(code)));
     }
 
-    @PatchMapping("/search/password") //Restful 한 Url 설계가 필요해보입니다!
-    public ResponseEntity<?> checkCodeForPwd(@RequestBody NewPwdRequestDto newPwdRequestDto) throws Exception {
+    @PatchMapping("/search/password") // 비밀번호 변경
+    public ResponseEntity<?> changePwd(@RequestBody NewPwdRequestDto newPwdRequestDto) throws Exception {
         Optional<Stylist> stylist = stylistRepository.findByUserId(newPwdRequestDto.getUserId());
         Optional<Member> member = memberRepository.findByUserId(newPwdRequestDto.getUserId());
         if(stylist.isPresent()) {
-            return ResponseEntity.ok(ApiUtils.success(stylistAuthService.changePassword(stylist.get() ,newPwdRequestDto)));
+            return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(stylistAuthService.changePassword(stylist.get() ,newPwdRequestDto)));
         }
         else if (member.isPresent()) {
-            return ResponseEntity.ok(new ChangePwdResponseDto(memberAuthService.changePassword(member.get(), newPwdRequestDto.getPassword(), newPwdRequestDto.getCode())));
+            return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(memberAuthService.changePassword(member.get(), newPwdRequestDto.getPassword(), newPwdRequestDto.getCode())));
         }
         else {
             throw new CustomException(USER_NOT_FOUND);

@@ -3,6 +3,7 @@ package com.apptive.marico.service.auth;
 import com.apptive.marico.dto.findPwd.NewPwdRequestDto;
 import com.apptive.marico.dto.stylist.StylistRequestDto;
 import com.apptive.marico.dto.stylist.StylistResponseDto;
+import com.apptive.marico.entity.Member;
 import com.apptive.marico.entity.Role;
 import com.apptive.marico.entity.Stylist;
 import com.apptive.marico.entity.token.VerificationToken;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 import static com.apptive.marico.entity.Role.RoleName.ROLE_STYLIST;
@@ -50,12 +52,19 @@ public class StylistAuthService {
 
     public String changePassword(Stylist stylist, NewPwdRequestDto newPwdRequestDto){
         VerificationToken verificationToken = verificationTokenRepository.findByVerificationCode(newPwdRequestDto.getCode());
-        if (!newPwdRequestDto.getUserId().equals(verificationTokenService.checkTokenAndGetEmail(verificationToken))){
-            throw new CustomException(EMAIL_DOES_NOT_MATCH);
+        if (verificationToken == null) {
+            throw new CustomException(VERIFICATION_CODE_INVAILD);
         }
+        if(!verificationToken.getExpiryDate().isAfter(LocalDateTime.now())) {
+            verificationTokenRepository.delete(verificationToken);
+            throw new CustomException(VERIFICATION_CODE_TIMEOUT);
+        }
+        if(stylist == null) throw new CustomException(STYLIST_NOT_FOUND);
+        verificationTokenRepository.delete(verificationToken);
         stylist.setPassword(passwordEncoder.encode(newPwdRequestDto.getPassword()));
         stylistRepository.save(stylist);
-        return "비밀 번호가 변경 되었습니다.";
+        return "비밀번호가 변경되었습니다.";
     }
+
 
 }
