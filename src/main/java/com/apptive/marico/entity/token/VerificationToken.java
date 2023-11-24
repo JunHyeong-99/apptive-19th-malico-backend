@@ -10,6 +10,7 @@ import java.util.UUID;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "verificationToken")
 public class VerificationToken {

@@ -50,14 +50,15 @@ public class MemberAuthService {
         return MemberResponseDto.toDto(memberRepository.save(member));
     }
 
-    public String changePassword(Member member, String password, String code) throws Exception{
+    public String changePassword(Member member, String password, String code) {
         VerificationToken verificationToken = verificationTokenRepository.findByVerificationCode(code);
-        if (verificationToken == null) return "인증번호가 일치하지 않습니다.";
+        if (verificationToken == null) throw new CustomException(VERIFICATION_CODE_INVAILD);;
         if(!verificationToken.getExpiryDate().isAfter(LocalDateTime.now())) {
             verificationTokenRepository.delete(verificationToken);
-            return "인증 시간이 초과 되었습니다.";
+            throw new CustomException(VERIFICATION_CODE_TIMEOUT);
         }
-        if(member == null) throw new Exception("changePassword(),member가 조회되지 않음");
+        if(member == null) throw new CustomException(MEMBER_NOT_FOUND);
+        verificationTokenRepository.delete(verificationToken);
         member.setPassword(passwordEncoder.encode(password));
         memberRepository.save(member);
         return "비밀번호가 변경되었습니다.";
