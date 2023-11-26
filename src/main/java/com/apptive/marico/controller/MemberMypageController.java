@@ -1,6 +1,8 @@
 package com.apptive.marico.controller;
 
+import com.apptive.marico.dto.member.MemberInformationDto;
 import com.apptive.marico.dto.member.MemberMypageDto;
+import com.apptive.marico.dto.mypage.LikedStylistListDto;
 import com.apptive.marico.service.MemberMypageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +23,8 @@ public class MemberMypageController {
     // 프로필 사진 수정
 
     // 관심 스타일리스트
-
-    // 이용 내역
-    // 후기 관리
-    // 개인 정보 수정
-    // 로그 아웃
+    @GetMapping("/liked-stylist")
+    public ResponseEntity<LikedStylistListDto> findLikedStylist(Principal principal) {
+        return ResponseEntity.ok(memberMyPageService.findLikedStylist(principal.getName()));
+    }
 }
