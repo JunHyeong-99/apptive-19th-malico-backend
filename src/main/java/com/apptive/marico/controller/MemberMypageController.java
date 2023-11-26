@@ -27,4 +27,16 @@ public class MemberMypageController {
     public ResponseEntity<LikedStylistListDto> findLikedStylist(Principal principal) {
         return ResponseEntity.ok(memberMyPageService.findLikedStylist(principal.getName()));
     }
+
+    /**
+     * 개인 정보 수정
+     * @param principal
+     * @return
+     */
+    // 조회
+    @GetMapping("/information")
+    public ResponseEntity<MemberInformationDto> findInformation(Principal principal) {
+        return ResponseEntity.ok(memberMyPageService.findInformation(principal.getName()));
+    }
+
 }
