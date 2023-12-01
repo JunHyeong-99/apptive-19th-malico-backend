@@ -11,9 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
@@ -50,17 +48,23 @@ public class Stylist implements UserDetails {
 
     private LocalDate birthDate;
 
-    private String residence;
+    private String city;
+
+    private String state;
 
     private String profileImage;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "education_id")
-    private Education education;
+    private String oneLineIntroduction;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "career_id")
-    private Career career;
+    private String stylistIntroduction;
+
+    private String chat_link;
+
+    @OneToMany(mappedBy = "stylist" , cascade = CascadeType.ALL, orphanRemoval = true) // 연결이 끊어진 career는 자동 삭제
+    private List<Career> career;
+
+    @OneToMany(mappedBy = "stylist", orphanRemoval = true) // 연결이 끊어진 스타일은 자동 삭제
+    private List<Style> style = new ArrayList<>();
 
 
     @Column(nullable = false)

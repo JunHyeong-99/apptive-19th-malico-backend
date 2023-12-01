@@ -22,7 +22,6 @@ public class StylistRequestDto {
     private String nickname;
     private char gender;
     private LocalDate birthDate;
-    private String residence;
     private String profile_image;
 
 
@@ -37,7 +36,6 @@ public class StylistRequestDto {
                 .nickname(nickname)
                 .gender(gender)
                 .birthDate(birthDate)
-                .residence(residence)
                 .profileImage(profile_image)
                 .build();
     }

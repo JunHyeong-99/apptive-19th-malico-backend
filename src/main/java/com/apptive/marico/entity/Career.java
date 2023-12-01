@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Table(name = "careers")
 public class Career {
     @Id
@@ -31,7 +32,8 @@ public class Career {
     @Column(nullable = false)
     private String endYear;
 
-    @OneToOne(mappedBy = "career", fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "stylist_id")
     private Stylist stylist;
 
 }
