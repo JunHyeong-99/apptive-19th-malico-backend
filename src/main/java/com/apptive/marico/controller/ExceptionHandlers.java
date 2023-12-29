@@ -12,6 +12,7 @@ import static com.apptive.marico.exception.ErrorCode.INTERNAL_SERVER_ERROR;
 
 @RestControllerAdvice
 public class ExceptionHandlers {
+    /*
     @ExceptionHandler({ CustomException.class })
     protected ResponseEntity handleCustomException(CustomException exception) {
         return new ResponseEntity(new ErrorDto(exception.getErrorCode().getStatus(), exception.getErrorCode().getMessage()), HttpStatus.valueOf(exception.getErrorCode().getStatus()));
@@ -23,4 +24,6 @@ public class ExceptionHandlers {
         exception.printStackTrace();
         return new ResponseEntity(new UnknownErrorDto(INTERNAL_SERVER_ERROR.getStatus(), INTERNAL_SERVER_ERROR.getMessage(), exception.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+     */
 }

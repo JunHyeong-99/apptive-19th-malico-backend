@@ -48,7 +48,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Override
-    @Transactional
     public UserDetails loadUserByUsername(String userId) {
         Optional<Member> memberOptional = memberRepository.findByUserId(userId);
         Optional<Stylist> stylistOptional = stylistRepository.findByUserId(userId);
@@ -57,13 +56,14 @@ public class CustomUserDetailsService implements UserDetailsService {
         } else if (stylistOptional.isPresent()) {
             return createUserDetails(stylistOptional.get());
         } else {
-            throw new CustomException(USER_NOT_FOUND);
+            throw new CustomException(ID_OR_PASSWORD_NOT_MATCH);
         }
     }
 
     @Transactional
     public TokenResponseDto login(LoginDto loginDto) {
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
+        isUserExist(loginDto.getUserId());
         UsernamePasswordAuthenticationToken authenticationToken = loginDto.toAuthentication();
 
         // 2. 실제로 검증 (사용자 비밀번호 체크) 이 이루어지는 부분
@@ -83,6 +83,15 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         // 5. 토큰 발급
         return tokenResDto;
+    }
+
+    public void isUserExist(String userId) {
+        Optional<Member> byUserId = memberRepository.findByUserId(userId);
+        Optional<Stylist> byUserId1 = stylistRepository.findByUserId(userId);
+
+        if(byUserId.isEmpty() && byUserId1.isEmpty()) {
+            throw new CustomException(ID_OR_PASSWORD_NOT_MATCH);
+        }
     }
 
     @Transactional
