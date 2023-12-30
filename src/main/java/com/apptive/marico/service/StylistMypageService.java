@@ -16,6 +16,7 @@ import com.apptive.marico.repository.ServiceCategoryRepository;
 import com.apptive.marico.repository.StylistServiceRepository;
 import com.apptive.marico.repository.StylistRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +34,7 @@ public class StylistMypageService {
     private final CareerRepository careerRepository;
     private final StylistServiceRepository serviceRepository;
     private final ServiceCategoryRepository serviceCategoryRepository;
+    private final ModelMapper modelMapper;
 
     public StylistMypageDto mypage(String userId) {
         Stylist stylist = stylistRepository.findByUserId(userId).orElseThrow(

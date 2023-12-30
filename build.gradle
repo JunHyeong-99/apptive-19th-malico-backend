@@ -49,6 +49,9 @@ dependencies {
 
 	//메일
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	//ModelMapper
+	implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.8'
 }
 
 tasks.named('test') {
