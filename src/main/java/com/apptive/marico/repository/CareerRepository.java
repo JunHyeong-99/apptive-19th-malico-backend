@@ -14,5 +14,5 @@ public interface CareerRepository extends JpaRepository<Career, Long> {
     // 일반 SQL쿼리
 //    @Transactional
 //    @Query(value = "delete from careers where stylist_id = :stylistId", nativeQuery = true)
-//    void deleteByStylist_Id(@Param("stylistId") Long stylistId);
+//    void deleteByStylist_Id_Qerry(@Param("stylistId") Long stylistId);
 }
