@@ -27,7 +27,7 @@ public class StylistService {
 
     private int price;
 
-    @OneToMany(mappedBy = "stylistService", fetch = FetchType.EAGER) // 즉시 로딩
+    @OneToMany(mappedBy = "stylistService")
     private List<ServiceCategory> serviceCategory = new ArrayList<>();
 
     @ManyToOne
