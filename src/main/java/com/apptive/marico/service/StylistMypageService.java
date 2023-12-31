@@ -1,21 +1,18 @@
 package com.apptive.marico.service;
 import com.apptive.marico.dto.CareerDto;
+import com.apptive.marico.dto.stylist.StyleDto;
+import com.apptive.marico.dto.stylist.StyleListDto;
 import com.apptive.marico.dto.stylist.StylistMypageDto;
 import com.apptive.marico.dto.stylist.StylistMypageEditDto;
 import com.apptive.marico.dto.stylist.service.ServiceCategoryDto;
 import com.apptive.marico.dto.stylist.service.StylistServiceDto;
 import com.apptive.marico.dto.stylist.service.StylistServiceResponseDto;
-import com.apptive.marico.entity.Career;
-import com.apptive.marico.entity.ServiceCategory;
-import com.apptive.marico.entity.Stylist;
-import com.apptive.marico.entity.StylistService;
+import com.apptive.marico.entity.*;
 import com.apptive.marico.exception.CustomException;
-import com.apptive.marico.repository.CareerRepository;
-import com.apptive.marico.repository.ServiceCategoryRepository;
-import com.apptive.marico.repository.StylistServiceRepository;
-import com.apptive.marico.repository.StylistRepository;
+import com.apptive.marico.repository.*;
 import lombok.RequiredArgsConstructor;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +31,7 @@ public class StylistMypageService {
     private final CareerRepository careerRepository;
     private final StylistServiceRepository serviceRepository;
     private final ServiceCategoryRepository serviceCategoryRepository;
-
+    private final StyleRepository styleRepository;
     public StylistMypageDto mypage(String userId) {
         Stylist stylist = stylistRepository.findByUserId(userId).orElseThrow(
                 () -> new CustomException(USER_NOT_FOUND));
@@ -153,5 +150,24 @@ public class StylistMypageService {
                 .categoryDescription(categoryDto.getCategoryDescription())
                 .stylistService(stylistService)
                 .build();
+    }
+
+    public StyleListDto getStyle(String userId) {
+        Optional<Stylist> stylist = stylistRepository.findByUserIdWithStyle(userId);
+        if(stylist.isEmpty()) throw new CustomException(USER_NOT_FOUND);
+        List<Style> styleList = stylist.get().getStyle();
+        List<StyleDto> styleDtoList = styleList.stream().map(StyleDto::toDto).collect(Collectors.toList());
+        return StyleListDto.builder().styleDtoList(styleDtoList).build();
+    }
+
+    public String addStyle(String userId, StyleDto styleDto) {
+        Optional<Stylist> stylist = stylistRepository.findByUserId(userId);
+        if (stylist.isEmpty()) throw new CustomException(USER_NOT_FOUND);
+        styleRepository.save(Style.builder()
+                .image(styleDto.getImage())
+                .category(styleDto.getCategory())
+                .stylist(stylist.get())
+                .build());
+        return "스타일이 등록되었습니다.";
     }
 }
