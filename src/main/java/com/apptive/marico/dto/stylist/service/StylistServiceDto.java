@@ -1,23 +1,18 @@
 package com.apptive.marico.dto.stylist.service;
 
 
-import com.apptive.marico.dto.stylist.StylistMypageDto;
-import com.apptive.marico.entity.ConnectionType;
-import com.apptive.marico.entity.ServiceType;
-import com.apptive.marico.entity.Stylist;
+
 import com.apptive.marico.entity.StylistService;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Builder
 @Getter
 public class StylistServiceDto {
+    private Long service_id;
     private String serviceName;
     private String serviceDescription;
 
@@ -30,6 +25,7 @@ public class StylistServiceDto {
                 .toList();
 
         return StylistServiceDto.builder()
+                .service_id(stylistService.getId())
                 .serviceName(stylistService.getServiceName())
                 .serviceDescription(stylistService.getServiceDescription())
                 .serviceCategoryDtoList(categoryDtoList)

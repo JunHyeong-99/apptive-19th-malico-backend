@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface StylistServiceRepository extends JpaRepository<StylistService, Long> {
 
@@ -14,4 +15,5 @@ public interface StylistServiceRepository extends JpaRepository<StylistService, 
 
     int countByStylist_id(Long stylist_id);
 
+    Optional<StylistService> findById(Long service_id);
 }

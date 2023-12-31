@@ -34,13 +34,19 @@ public class StylistMypageController {
     }
 
     @GetMapping("/stylist-service")
-    public ResponseEntity<?> loadService(Principal principal) {
-        return ResponseEntity.ok(stylistMypageService.getService(principal.getName()));
+    public ResponseEntity<?> loadServiceList(Principal principal) {
+        return ResponseEntity.ok(stylistMypageService.getServiceList(principal.getName()));
     }
 
     @PostMapping("/stylist-service")
     public ResponseEntity<?> addService(Principal principal, @RequestBody StylistServiceDto stylistServiceDto) {
-        System.out.println(stylistServiceDto);
         return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(stylistMypageService.addService(principal.getName(), stylistServiceDto)));
     }
+
+    @GetMapping("/stylist-service/{service_id}")
+    public ResponseEntity<?> loadService(Principal principal, @PathVariable("service_id") Long service_id) {
+        return ResponseEntity.ok(stylistMypageService.getService(principal.getName(), service_id));
+    }
+    
+
 }

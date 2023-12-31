@@ -20,10 +20,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.apptive.marico.exception.ErrorCode.TOO_MANY_SERVICES;
-import static com.apptive.marico.exception.ErrorCode.USER_NOT_FOUND;
+import static com.apptive.marico.exception.ErrorCode.*;
 
 @Service
 @Transactional
@@ -72,7 +72,7 @@ public class StylistMypageService {
                 .build();
     }
 
-    public StylistServiceResponseDto getService(String userId) {
+    public StylistServiceResponseDto getServiceList(String userId) {
         Stylist stylist = stylistRepository.findByUserId(userId)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
@@ -112,5 +112,18 @@ public class StylistMypageService {
                 .stylistService(stylistService)
                 .build();
         serviceCategoryRepository.save(serviceCategory);
+    }
+
+    public StylistServiceDto getService(String userId, Long service_id) {
+        Stylist stylist = stylistRepository.findByUserId(userId)
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+        Optional<StylistService> service = serviceRepository.findById(service_id);
+        if (service.isEmpty()) {
+            throw new CustomException(SERVICE_NOT_FOUND);
+        }
+        if (service.get().getStylist() != stylist) {
+            throw new CustomException(STYLIST_NOT_MATCH_SERVICE);
+        }
+        return StylistServiceDto.toDto(service.get());
     }
 }
