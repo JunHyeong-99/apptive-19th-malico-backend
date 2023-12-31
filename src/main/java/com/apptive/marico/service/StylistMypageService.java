@@ -1,5 +1,4 @@
 package com.apptive.marico.service;
-
 import com.apptive.marico.dto.CareerDto;
 import com.apptive.marico.dto.stylist.StylistMypageDto;
 import com.apptive.marico.dto.stylist.StylistMypageEditDto;
@@ -16,7 +15,7 @@ import com.apptive.marico.repository.ServiceCategoryRepository;
 import com.apptive.marico.repository.StylistServiceRepository;
 import com.apptive.marico.repository.StylistRepository;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +33,6 @@ public class StylistMypageService {
     private final CareerRepository careerRepository;
     private final StylistServiceRepository serviceRepository;
     private final ServiceCategoryRepository serviceCategoryRepository;
-    private final ModelMapper modelMapper;
 
     public StylistMypageDto mypage(String userId) {
         Stylist stylist = stylistRepository.findByUserId(userId).orElseThrow(
@@ -54,20 +52,13 @@ public class StylistMypageService {
                 () -> new CustomException(USER_NOT_FOUND));
 
         // 기존 career 삭제 후 다음 career 등록
-        careerRepository.deleteByStylist_Id(stylist.getId());
+        careerRepository.deleteByStylist(stylist);
         //연관관계 주인을 통한 새로운 career 저장
         List<CareerDto> careerDtoList = stylistMypageEditDto.getCareerDtoList();
         careerDtoList.stream()
                 .map(careerDto -> createCareer(careerDto, stylist))
                 .forEach(careerRepository::save);
-        //다른 attribute 저장
-        stylist.setProfileImage(stylistMypageEditDto.getProfile_image());
-        stylist.setNickname(stylistMypageEditDto.getNickname());
-        stylist.setOneLineIntroduction(stylistMypageEditDto.getOneLineIntroduction());
-        stylist.setStylistIntroduction(stylistMypageEditDto.getStylistIntroduction());
-        stylist.setCity(stylistMypageEditDto.getCity());
-        stylist.setState(stylistMypageEditDto.getState());
-        stylist.setChat_link(stylistMypageEditDto.getChat_link());
+        stylist.editStylist(stylistMypageEditDto);
         return "정상적으로 입력되었습니다.";
     }
 
@@ -97,8 +88,8 @@ public class StylistMypageService {
     public String addService(String userId, StylistServiceDto stylistServiceDto) {
         Stylist stylist = stylistRepository.findByUserId(userId)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
-        int service_num = serviceRepository.countByStylist_id(stylist.getId());
-        if (service_num >= 5) throw new CustomException(TOO_MANY_SERVICES);
+        if (serviceRepository.countByStylist_id(stylist.getId()) >= 5) throw new CustomException(TOO_MANY_SERVICES);
+
         List<ServiceCategoryDto> serviceCategoryDtoList = stylistServiceDto.getServiceCategoryDtoList();
         StylistService stylistService = StylistService.builder()
                 .serviceName(stylistServiceDto.getServiceName())
