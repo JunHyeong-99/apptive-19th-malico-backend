@@ -15,6 +15,6 @@ public interface StylistRepository extends JpaRepository<Stylist,Long> {
     boolean existsByEmail(String email);
     boolean existsByNickname(String nickname);
 
-    @Query("SELECT DISTINCT s FROM Stylist s JOIN FETCH s.style WHERE s.userId = :userId")
+    @Query("SELECT DISTINCT s FROM Stylist s LEFT JOIN FETCH s.style WHERE s.userId = :userId")
     Optional<Stylist> findByUserIdWithStyle(String userId);
 }
