@@ -1,5 +1,6 @@
 package com.apptive.marico.entity;
 
+import com.apptive.marico.dto.stylist.service.StylistServiceDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,6 +35,10 @@ public class StylistService {
     @JoinColumn(name = "stylist_id")
     private Stylist stylist;
 
-
+    public void editService(StylistServiceDto stylistServiceDto){
+        this.serviceName = stylistServiceDto.getServiceName();
+        this.serviceDescription = stylistServiceDto.getServiceDescription();
+        this.price = stylistServiceDto.getPrice();
+    }
 
 }

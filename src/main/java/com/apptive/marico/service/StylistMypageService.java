@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -117,7 +118,7 @@ public class StylistMypageService {
     public StylistServiceDto getService(String userId, Long service_id) {
         Stylist stylist = stylistRepository.findByUserId(userId)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
-        Optional<StylistService> service = serviceRepository.findById(service_id);
+        Optional<StylistService> service = serviceRepository.findServiceWithStylistById(service_id);
         if (service.isEmpty()) {
             throw new CustomException(SERVICE_NOT_FOUND);
         }
@@ -125,5 +126,32 @@ public class StylistMypageService {
             throw new CustomException(STYLIST_NOT_MATCH_SERVICE);
         }
         return StylistServiceDto.toDto(service.get());
+    }
+
+    public String editService(String userId, Long serviceId, StylistServiceDto stylistServiceDto) {
+        Optional<Stylist> stylist = stylistRepository.findByUserId(userId);
+        if (stylist.isEmpty()) throw new CustomException(USER_NOT_FOUND);
+
+        Optional<StylistService> stylistService = serviceRepository.findServiceWithStylistById(serviceId);
+        if (stylistService.isEmpty()) throw new CustomException(SERVICE_NOT_FOUND);
+        if (!Objects.equals(stylistService.get().getStylist(), stylist.get())) throw new CustomException(STYLIST_NOT_MATCH_SERVICE);
+
+        serviceCategoryRepository.deleteAllByStylistService(stylistService.get());
+        List<ServiceCategoryDto> serviceCategoryDtoList = stylistServiceDto.getServiceCategoryDtoList();
+
+        serviceCategoryDtoList.stream()
+                .map(categoryDto-> createServiceCategory(categoryDto, stylistService.get()))
+                .forEach(serviceCategoryRepository::save);
+        stylistService.get().editService(stylistServiceDto);
+        return "서비스가 수정되었습니다.";
+    }
+
+    private static ServiceCategory createServiceCategory(ServiceCategoryDto categoryDto, StylistService stylistService) {
+        return ServiceCategory.builder()
+                .serviceType(categoryDto.getServiceType())
+                .connectionType(categoryDto.getConnectionType())
+                .categoryDescription(categoryDto.getCategoryDescription())
+                .stylistService(stylistService)
+                .build();
     }
 }

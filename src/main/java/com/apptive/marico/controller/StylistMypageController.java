@@ -47,6 +47,10 @@ public class StylistMypageController {
     public ResponseEntity<?> loadService(Principal principal, @PathVariable("service_id") Long service_id) {
         return ResponseEntity.ok(stylistMypageService.getService(principal.getName(), service_id));
     }
-    
 
+    @PatchMapping("/stylist-service/{service_id}")
+    public ResponseEntity<?> editService(Principal principal, @PathVariable("service_id") Long service_id, @RequestBody StylistServiceDto stylistServiceDto) {
+        System.out.println(stylistServiceDto);
+        return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(stylistMypageService.editService(principal.getName(), service_id, stylistServiceDto)));
+    }
 }

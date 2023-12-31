@@ -10,10 +10,11 @@ import java.util.Optional;
 public interface StylistServiceRepository extends JpaRepository<StylistService, Long> {
 
 
-    @Query("SELECT s FROM StylistService s JOIN FETCH s.serviceCategory")
+    @Query("SELECT s FROM StylistService s JOIN FETCH s.serviceCategory WHERE s.stylist.id = :stylist_id")
     List<StylistService> findAllByStylist_id(Long stylist_id);
 
     int countByStylist_id(Long stylist_id);
 
-    Optional<StylistService> findById(Long service_id);
+    @Query("SELECT s FROM StylistService s JOIN FETCH s.stylist WHERE s.id = :service_id")
+    Optional<StylistService> findServiceWithStylistById(Long service_id);
 }
