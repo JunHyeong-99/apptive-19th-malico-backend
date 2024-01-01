@@ -1,5 +1,6 @@
 package com.apptive.marico.controller;
 
+import com.apptive.marico.dto.stylist.DeleteStyleDto;
 import com.apptive.marico.dto.stylist.StyleDto;
 import com.apptive.marico.dto.stylist.StylistMypageDto;
 import com.apptive.marico.dto.stylist.StylistMypageEditDto;
@@ -62,5 +63,10 @@ public class StylistMypageController {
     @PostMapping("/style")
     public ResponseEntity<?> addMyStyle(Principal principal, @RequestBody StyleDto styleDto) {
         return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(stylistMypageService.addStyle(principal.getName(), styleDto)));
+    }
+
+    @DeleteMapping("/style")
+    public ResponseEntity<?> deleteMyStyle(Principal principal, @RequestBody DeleteStyleDto deleteStyleDto) {
+        return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(stylistMypageService.deleteStyle(principal.getName(), deleteStyleDto)));
     }
 }

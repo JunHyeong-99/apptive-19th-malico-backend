@@ -1,15 +1,13 @@
 package com.apptive.marico.service;
 import com.apptive.marico.dto.CareerDto;
-import com.apptive.marico.dto.stylist.StyleDto;
-import com.apptive.marico.dto.stylist.StyleListDto;
-import com.apptive.marico.dto.stylist.StylistMypageDto;
-import com.apptive.marico.dto.stylist.StylistMypageEditDto;
+import com.apptive.marico.dto.stylist.*;
 import com.apptive.marico.dto.stylist.service.ServiceCategoryDto;
 import com.apptive.marico.dto.stylist.service.StylistServiceDto;
 import com.apptive.marico.dto.stylist.service.StylistServiceResponseDto;
 import com.apptive.marico.entity.*;
 import com.apptive.marico.exception.CustomException;
 import com.apptive.marico.repository.*;
+import com.apptive.marico.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
 
 import org.modelmapper.ModelMapper;
@@ -169,5 +167,41 @@ public class StylistMypageService {
                 .stylist(stylist.get())
                 .build());
         return "스타일이 등록되었습니다.";
+    }
+
+    public String deleteStyle(String userId, DeleteStyleDto deleteStyleDto) {
+        Optional<Stylist> stylist = stylistRepository.findByUserIdWithStyle(userId);
+        if (stylist.isEmpty()) throw new CustomException(USER_NOT_FOUND);
+
+        List<Style> style = stylist.get().getStyle();
+        if (style.isEmpty()) throw new CustomException(STYLE_NOT_FOUND);
+        Long[] styleIdList = extractStyleIds(style);
+
+        for (Long deleteStyleId : deleteStyleDto.getDeleteStyleIdList()) {
+            if (containsValue(styleIdList, deleteStyleId)) {
+                styleRepository.deleteById(deleteStyleId);
+            }
+            else throw new CustomException(STYLE_NOT_FOUND);
+        }
+
+        return "STYLE이 삭제 되었습니다.";
+    }
+
+    private static Long[] extractStyleIds(List<Style> styleList) {
+        Long[] idArray = new Long[styleList.size()];
+
+        for (int i = 0; i < styleList.size(); i++) {
+            idArray[i] = styleList.get(i).getId();
+        }
+
+        return idArray;
+    }
+    private static boolean containsValue(Long[] array, long targetValue) {
+        for (long element : array) {
+            if (element == targetValue) {
+                return true;
+            }
+        }
+        return false;
     }
 }

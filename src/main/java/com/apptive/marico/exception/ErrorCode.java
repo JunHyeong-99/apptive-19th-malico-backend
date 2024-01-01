@@ -26,6 +26,7 @@ public enum ErrorCode {
     MEMBER_NOT_FOUND(404, "존재하지 않는 회원입니다."),
     STYLIST_NOT_MATCH_SERVICE(404, "자신이 등록한 서비스가 아닙니다."),
     SERVICE_NOT_FOUND(404, "존재하지 않는 서비스입니다."),
+    STYLE_NOT_FOUND(404, "존재하지 않는 STYLE입니다."),
 
     //409 CONFLICT 중복된 리소스
     ALREADY_SAVED_EMAIL(409, "이미 저장된 이메일입니다."),
