@@ -145,7 +145,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
     }
 
-    private void checkPasswordAvailability(String password) {
+    public void checkPasswordAvailability(String password) {
         Pattern passwordPattern = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{8,20}$");
         Matcher passwordMatcher = passwordPattern.matcher(password);
         if (!passwordMatcher.matches()) {

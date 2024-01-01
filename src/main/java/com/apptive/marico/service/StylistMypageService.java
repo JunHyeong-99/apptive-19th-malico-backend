@@ -7,10 +7,12 @@ import com.apptive.marico.dto.stylist.service.StylistServiceResponseDto;
 import com.apptive.marico.entity.*;
 import com.apptive.marico.exception.CustomException;
 import com.apptive.marico.repository.*;
+import com.apptive.marico.service.auth.CustomUserDetailsService;
 import com.apptive.marico.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +32,8 @@ public class StylistMypageService {
     private final StylistServiceRepository serviceRepository;
     private final ServiceCategoryRepository serviceCategoryRepository;
     private final StyleRepository styleRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final CustomUserDetailsService customUserDetailsService;
     public StylistMypageDto mypage(String userId) {
         Stylist stylist = stylistRepository.findByUserId(userId).orElseThrow(
                 () -> new CustomException(USER_NOT_FOUND));
@@ -203,5 +207,27 @@ public class StylistMypageService {
             }
         }
         return false;
+    }
+
+    public String checkPassword(String userId, String currentPassword) {
+        Stylist stylist = stylistRepository.findByUserId(userId).orElseThrow(
+                () -> new CustomException(USER_NOT_FOUND));
+
+        if(!passwordEncoder.matches(currentPassword, stylist.getPassword())){
+            throw new CustomException(PASSWORD_NOT_MATCH);
+        }
+        return "비밀번호가 일치합니다.";
+    }
+
+    public String changePassword(String userId, String newPassword) {
+        Stylist stylist = stylistRepository.findByUserId(userId).orElseThrow(
+                () -> new CustomException(USER_NOT_FOUND));
+
+        customUserDetailsService.checkPasswordAvailability(newPassword);
+
+        stylist.setPassword(passwordEncoder.encode(newPassword));
+        stylistRepository.save(stylist);
+
+        return "비밀번호가 변경되었습니다.";
     }
 }

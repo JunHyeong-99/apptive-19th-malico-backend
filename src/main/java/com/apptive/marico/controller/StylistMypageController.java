@@ -69,4 +69,14 @@ public class StylistMypageController {
     public ResponseEntity<?> deleteMyStyle(Principal principal, @RequestBody DeleteStyleDto deleteStyleDto) {
         return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(stylistMypageService.deleteStyle(principal.getName(), deleteStyleDto)));
     }
+
+    @GetMapping("/password")
+    public ResponseEntity<?> checkPassword(Principal principal, @RequestParam String currentPassword) {
+        return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(stylistMypageService.checkPassword(principal.getName(), currentPassword)));
+    }
+
+    @PatchMapping("/password")
+    public ResponseEntity<?> changePassword(Principal principal, @RequestParam String newPassword) {
+        return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(stylistMypageService.changePassword(principal.getName(), newPassword)));
+    }
 }
