@@ -24,10 +24,10 @@ public class LikeService {
     private final LikeRepository likeRepository;
     @Transactional
     public void addlike(String userId, LikeRequestDto likeRequestDto) {
-        Member member = memberRepository.findByUserId(userId).orElseThrow(
-                () -> new CustomException(USER_NOT_FOUND));
-        Stylist stylist = stylistRepository.findByUserId(likeRequestDto.getStylist_id()).orElseThrow(
-                () -> new CustomException(STYLIST_NOT_FOUND));
+        Member member = memberRepository.findByUserId(userId)
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+        Stylist stylist = stylistRepository.findById(likeRequestDto.getStylist_id())
+                .orElseThrow(() -> new CustomException(STYLIST_NOT_FOUND));
         Like like = likeRepository.save(Like.builder()
                 .member(member)
                 .stylist(stylist).build());

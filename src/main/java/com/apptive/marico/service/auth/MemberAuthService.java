@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,6 +50,8 @@ public class MemberAuthService {
 
         return MemberResponseDto.toDto(memberRepository.save(member));
     }
+
+
 
     public String changePassword(Member member, String password, String code) {
         VerificationToken verificationToken = verificationTokenRepository.findByVerificationCode(code);

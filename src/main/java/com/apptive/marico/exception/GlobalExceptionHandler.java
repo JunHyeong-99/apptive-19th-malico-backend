@@ -1,10 +1,14 @@
 package com.apptive.marico.exception;
 
+import com.apptive.marico.dto.error.ErrorDto;
 import com.apptive.marico.utils.ApiUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import static com.apptive.marico.exception.ErrorCode.ID_OR_PASSWORD_NOT_MATCH;
 
 
 @RestControllerAdvice
@@ -28,5 +32,10 @@ public class GlobalExceptionHandler {
     private static ResponseEntity<ApiUtils.ApiFail> createFailResponse(HttpStatus httpStatus, String message) {
         ApiUtils.ApiFail apiFail = ApiUtils.fail(httpStatus.value(), message);
         return new ResponseEntity<>(apiFail, httpStatus);
+    }
+
+    @ExceptionHandler({ BadCredentialsException.class })
+    protected ResponseEntity handleAuthenticationException(BadCredentialsException exception) {
+        return createFailResponse(HttpStatus.valueOf(ID_OR_PASSWORD_NOT_MATCH.getStatus()), ID_OR_PASSWORD_NOT_MATCH.getMessage());
     }
 }
