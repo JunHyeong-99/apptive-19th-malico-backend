@@ -7,10 +7,11 @@ import lombok.Getter;
 @Getter
 public enum ErrorCode {
     //400 BAD_REQUEST 잘못된 요청
-    PASSWORD_NOT_MATCH(400, "잘못된 비밀번호입니다."),
+    PASSWORD_NOT_MATCH(400, "비밀번호가 일치하지 않습니다."),
     INVALID_ID(400, "아이디는 영문 소문자, 숫자 포함 6~20자 이내이어야 합니다."),
     INVALID_PASSWORD(400, "비밀번호는 영문, 숫자, 특수문자 포함 8~20자 이내이어야 합니다."),
     INVALID_NICKNAME(400, "닉네임은 한글, 영문, 숫자 중 2~10자 이내이어야 합니다."),
+    ID_OR_PASSWORD_NOT_MATCH(400, "아이디 혹은 비밀번호가 틀렸습니다."),
 
 
     VERIFICATION_CODE_INVAILD(401, "발급 코드가 유효하지 않습니다."),

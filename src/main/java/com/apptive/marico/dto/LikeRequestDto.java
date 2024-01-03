@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LikeRequestDto {
-    private String stylist_id;
+    private Long stylist_id;
 }

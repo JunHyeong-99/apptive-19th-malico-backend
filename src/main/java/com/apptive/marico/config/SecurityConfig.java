@@ -35,6 +35,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // CSRF 설정 Disable
+        http.csrf().disable(); // 외부 POST 요청을 받아야하니 csrf는 꺼준다.
+        http.cors(); // ⭐ CORS를 커스텀하려면 이렇게
         http.cors().and().addFilter(corsFilter)
             .csrf().disable()
             // exception handling 할 때 우리가 만든 클래스를 추가
