@@ -1,5 +1,6 @@
 package com.apptive.marico.entity;
 
+import com.apptive.marico.dto.stylist.StylistMypageEditDto;
 import com.apptive.marico.entity.token.VerificationToken;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -77,6 +78,15 @@ public class Stylist implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    public void editStylist(StylistMypageEditDto stylistMypageEditDto) {
+        this.setProfileImage(stylistMypageEditDto.getProfile_image());
+        this.setNickname(stylistMypageEditDto.getNickname());
+        this.setOneLineIntroduction(stylistMypageEditDto.getOneLineIntroduction());
+        this.setStylistIntroduction(stylistMypageEditDto.getStylistIntroduction());
+        this.setCity(stylistMypageEditDto.getCity());
+        this.setState(stylistMypageEditDto.getState());
+        this.setChat_link(stylistMypageEditDto.getChat_link());
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()
