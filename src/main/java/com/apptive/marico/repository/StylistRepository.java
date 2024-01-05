@@ -17,4 +17,7 @@ public interface StylistRepository extends JpaRepository<Stylist,Long> {
 
     @Query("SELECT DISTINCT s FROM Stylist s LEFT JOIN FETCH s.style WHERE s.userId = :userId")
     Optional<Stylist> findByUserIdWithStyle(String userId);
+
+    @Query("SELECT s FROM Stylist s LEFT JOIN FETCH s.noticeReadStatuses WHERE s.userId = :userId")
+    Optional<Stylist> findByUserIdWithNoticeReadStatus(String userId);
 }

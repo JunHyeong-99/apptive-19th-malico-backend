@@ -2,6 +2,7 @@ package com.apptive.marico.repository;
 
 import com.apptive.marico.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
@@ -11,6 +12,9 @@ public interface MemberRepository extends JpaRepository<Member,Long> {
     boolean existsByUserId(String userId);
     boolean existsByEmail(String email);
     boolean existsByNickname(String nickname);
+
+    @Query("SELECT m FROM Member m LEFT JOIN FETCH m.noticeReadStatuses WHERE m.userId = :userId")
+    Optional<Member> findByUserIdWithNoticeReadStatus(String userId);
 
 
 //    Optional<User> findByNicknameAndFindQuesNumAndFindAnswer(String nickname, Integer findQuesNum, String findAnswer);

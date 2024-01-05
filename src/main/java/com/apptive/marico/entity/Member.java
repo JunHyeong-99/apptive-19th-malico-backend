@@ -11,9 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
@@ -32,12 +30,11 @@ public class Member implements UserDetails {
     @Column(nullable = false)
     private String name;
 
-    // userdatails의 username에 사용자의 email 값을 저장하고 싶은데, 변수명을 바꿔도 될까?
     @Column(updatable = false,unique = true,nullable = false)
     private String email;
 
     @Column(updatable = false, unique = true, nullable = false)
-    private String userId;
+    private String  userId;
 
     @Column(nullable = false)
     private String password;
@@ -53,6 +50,9 @@ public class Member implements UserDetails {
     private String residence;
 
     private String profileImage;
+
+    @OneToMany(mappedBy = "member", orphanRemoval = true)
+    private List<NoticeReadStatus> noticeReadStatuses = new ArrayList<>();
 
 
     @Column(nullable = false)

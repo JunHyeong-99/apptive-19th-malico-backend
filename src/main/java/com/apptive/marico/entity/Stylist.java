@@ -67,6 +67,8 @@ public class Stylist implements UserDetails {
     @OneToMany(mappedBy = "stylist", orphanRemoval = true) // 연결이 끊어진 스타일은 자동 삭제
     private List<Style> style = new ArrayList<>();
 
+    @OneToMany(mappedBy = "stylist", orphanRemoval = true)
+    private List<NoticeReadStatus> noticeReadStatuses = new ArrayList<>();
 
     @Column(nullable = false)
     private boolean enabled;
