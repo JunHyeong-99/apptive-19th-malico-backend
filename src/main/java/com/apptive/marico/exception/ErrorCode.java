@@ -17,11 +17,17 @@ public enum ErrorCode {
     VERIFICATION_CODE_INVAILD(401, "발급 코드가 유효하지 않습니다."),
     EMAIL_DOES_NOT_MATCH(401, "이메일이 일치하지 않습니다."),
 
+    //403 Forbidden 요청이 이해되었지만 서버가 요청을 거부했음
+    TOO_MANY_SERVICES(403, "등록할 수 있는 서비스 갯수를 초과했습니다."),
+
     //404 NOT_FOUND 잘못된 리소스 접근
     EMAIL_NOT_FOUND(404, "존재하지 않는 이메일입니다."),
     USER_NOT_FOUND(404, "존재하지 않는 회원입니다."),
     STYLIST_NOT_FOUND(404, "존재하지 않는 스타일리스트입니다."),
     MEMBER_NOT_FOUND(404, "존재하지 않는 회원입니다."),
+    STYLIST_NOT_MATCH_SERVICE(404, "자신이 등록한 서비스가 아닙니다."),
+    SERVICE_NOT_FOUND(404, "존재하지 않는 서비스입니다."),
+    STYLE_NOT_FOUND(404, "존재하지 않는 STYLE입니다."),
 
     //409 CONFLICT 중복된 리소스
     ALREADY_SAVED_EMAIL(409, "이미 저장된 이메일입니다."),
