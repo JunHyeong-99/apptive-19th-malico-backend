@@ -64,7 +64,7 @@ public class VerificationTokenService {
             }
             else throw new CustomException(USER_NOT_FOUND);
         }
-        throw new CustomException(VERIFICATION_CODE_INVAILD);
+        throw new CustomException(VERIFICATION_CODE_INVALID);
     }
 
     public String checkTokenAndSetExpiryDate(String Code) {
@@ -92,7 +92,7 @@ public class VerificationTokenService {
 
     public boolean checkToken(VerificationToken verificationToken) {
         if(verificationToken == null) {
-            throw new CustomException(VERIFICATION_CODE_INVAILD);
+            throw new CustomException(VERIFICATION_CODE_INVALID);
         }
         //시간이 지난 경우
         if(!verificationToken.getExpiryDate().isAfter(LocalDateTime.now())) {

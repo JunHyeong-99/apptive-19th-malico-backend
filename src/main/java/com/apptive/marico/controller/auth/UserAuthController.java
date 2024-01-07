@@ -3,12 +3,11 @@ package com.apptive.marico.controller.auth;
 
 import com.apptive.marico.dto.LoginDto;
 import com.apptive.marico.dto.token.TokenRequestDto;
-import com.apptive.marico.dto.token.TokenResponseDto;
-import com.apptive.marico.dto.findPwd.ChangePwdResponseDto;
+import com.apptive.marico.dto.token.TokenDto;
 import com.apptive.marico.dto.findPwd.NewPwdRequestDto;
 import com.apptive.marico.dto.findId.SendEmailRequestDto;
+import com.apptive.marico.dto.token.TokenResponseDto;
 import com.apptive.marico.dto.verificationToken.SendEmailResponseDto;
-import com.apptive.marico.dto.verificationToken.VerificationTokenResponseDto;
 import com.apptive.marico.entity.Member;
 import com.apptive.marico.entity.Stylist;
 import com.apptive.marico.exception.CustomException;
@@ -19,6 +18,9 @@ import com.apptive.marico.service.auth.CustomUserDetailsService;
 import com.apptive.marico.service.auth.MemberAuthService;
 import com.apptive.marico.service.auth.StylistAuthService;
 import com.apptive.marico.utils.ApiUtils;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,8 +41,28 @@ public class UserAuthController {
     private final CustomUserDetailsService customUserDetailsService;
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponseDto> login(@RequestBody LoginDto loginDto) {
-        return ResponseEntity.ok(customUserDetailsService.login(loginDto));
+    public ResponseEntity<?> login(HttpServletResponse response, @RequestBody LoginDto loginDto) {
+        TokenDto tokenDto = customUserDetailsService.login(loginDto);
+        response.setHeader("Set-Cookie",
+                "refreshToken=" + tokenDto.getRefreshToken() + "; Path=/; HttpOnly; SameSite=Strict; Secure; expires=" + tokenDto.getRefreshTokenExpiresIn());
+        return ResponseEntity.ok(TokenResponseDto.builder()
+                .grantType(tokenDto.getGrantType())
+                .accessToken(tokenDto.getAccessToken())
+                .accessTokenExpiresIn(tokenDto.getAccessTokenExpiresIn())
+                .build());
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refreshToken(HttpServletRequest request,  HttpServletResponse response, @CookieValue String refreshToken) {
+        String accessToken = request.getHeader("authorization").substring(7);
+        TokenDto tokenDto = customUserDetailsService.refreshToken(accessToken, refreshToken);
+        response.setHeader("Set-Cookie",
+                "refreshToken=" + tokenDto.getRefreshToken() + "; Path=/; HttpOnly; SameSite=Strict; Secure;");
+        return ResponseEntity.ok(TokenResponseDto.builder()
+                .grantType(tokenDto.getGrantType())
+                .accessToken(tokenDto.getAccessToken())
+                .accessTokenExpiresIn(tokenDto.getAccessTokenExpiresIn())
+                .build());
     }
 
     @PostMapping("/logout")

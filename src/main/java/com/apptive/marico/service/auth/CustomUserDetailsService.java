@@ -2,10 +2,9 @@ package com.apptive.marico.service.auth;
 
 import com.apptive.marico.dto.LoginDto;
 import com.apptive.marico.dto.member.MemberRequestDto;
-import com.apptive.marico.dto.member.MemberResponseDto;
 import com.apptive.marico.dto.stylist.StylistRequestDto;
 import com.apptive.marico.dto.token.TokenRequestDto;
-import com.apptive.marico.dto.token.TokenResponseDto;
+import com.apptive.marico.dto.token.TokenDto;
 import com.apptive.marico.entity.Member;
 import com.apptive.marico.entity.Stylist;
 import com.apptive.marico.entity.token.RefreshToken;
@@ -14,6 +13,10 @@ import com.apptive.marico.jwt.TokenProvider;
 import com.apptive.marico.repository.MemberRepository;
 import com.apptive.marico.repository.RefreshTokenRepository;
 import com.apptive.marico.repository.StylistRepository;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -22,11 +25,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -61,7 +64,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Transactional
-    public TokenResponseDto login(LoginDto loginDto) {
+    public TokenDto login(LoginDto loginDto) {
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
         isUserExist(loginDto.getUserId());
         UsernamePasswordAuthenticationToken authenticationToken = loginDto.toAuthentication();
@@ -71,7 +74,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
-        TokenResponseDto tokenResDto = tokenProvider.generateTokenDto(authentication);
+        TokenDto tokenResDto = tokenProvider.generateTokenDto(authentication);
 
         // 4. RefreshToken 저장
         RefreshToken refreshToken = RefreshToken.builder()
@@ -84,6 +87,19 @@ public class CustomUserDetailsService implements UserDetailsService {
         // 5. 토큰 발급
         return tokenResDto;
     }
+
+    public TokenDto refreshToken(String accessToken,String refreshToken) {
+        if(!tokenProvider.validateTokenExceptExpiration(accessToken)) throw new CustomException(VALID_ACCESS_TOKEN);
+        if (tokenProvider.validateToken(refreshToken)) {
+            Authentication authentication = tokenProvider.getAuthentication(refreshToken);
+            return tokenProvider.reissueTokenDto(authentication, refreshToken);
+        }
+        else {
+            throw new CustomException(TOKEN_NOT_FOUND);
+        }
+    }
+
+
 
     public void isUserExist(String userId) {
         Optional<Member> byUserId = memberRepository.findByUserId(userId);

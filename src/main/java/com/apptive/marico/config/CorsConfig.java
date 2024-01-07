@@ -21,6 +21,7 @@ public class CorsConfig {
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setExposedHeaders(List.of("*"));
+        config.addExposedHeader("Set-Cookie");
 
         source.registerCorsConfiguration("/**", config);
 

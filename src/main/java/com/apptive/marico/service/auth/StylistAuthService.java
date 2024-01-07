@@ -3,7 +3,6 @@ package com.apptive.marico.service.auth;
 import com.apptive.marico.dto.findPwd.NewPwdRequestDto;
 import com.apptive.marico.dto.stylist.StylistRequestDto;
 import com.apptive.marico.dto.stylist.StylistResponseDto;
-import com.apptive.marico.entity.Member;
 import com.apptive.marico.entity.Role;
 import com.apptive.marico.entity.Stylist;
 import com.apptive.marico.entity.token.VerificationToken;
@@ -53,7 +52,7 @@ public class StylistAuthService {
     public String changePassword(Stylist stylist, NewPwdRequestDto newPwdRequestDto){
         VerificationToken verificationToken = verificationTokenRepository.findByVerificationCode(newPwdRequestDto.getCode());
         if (verificationToken == null) {
-            throw new CustomException(VERIFICATION_CODE_INVAILD);
+            throw new CustomException(VERIFICATION_CODE_INVALID);
         }
         if(!verificationToken.getExpiryDate().isAfter(LocalDateTime.now())) {
             verificationTokenRepository.delete(verificationToken);

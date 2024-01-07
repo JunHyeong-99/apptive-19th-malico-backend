@@ -14,7 +14,7 @@ public enum ErrorCode {
     ID_OR_PASSWORD_NOT_MATCH(400, "아이디 혹은 비밀번호가 틀렸습니다."),
 
 
-    VERIFICATION_CODE_INVAILD(401, "발급 코드가 유효하지 않습니다."),
+    VERIFICATION_CODE_INVALID(401, "발급 코드가 유효하지 않습니다."),
     EMAIL_DOES_NOT_MATCH(401, "이메일이 일치하지 않습니다."),
 
     //403 Forbidden 요청이 이해되었지만 서버가 요청을 거부했음
@@ -30,6 +30,8 @@ public enum ErrorCode {
     STYLE_NOT_FOUND(404, "존재하지 않는 STYLE입니다."),
     USER_NOT_ADMIN(404, "관리자만 접근할 수 있습니다."),
     NOTICE_NOT_FOUND(404, "존재하지 않는 공지사항합니다."),
+    TOKEN_NOT_FOUND(404, "존재하지 않는 TOKEN입니다."),
+    VALID_ACCESS_TOKEN(404, "ACCESS TOKEN이 존재하지 않거나 기한이 초과하지 않았습니다."),
 
     //409 CONFLICT 중복된 리소스
     ALREADY_SAVED_EMAIL(409, "이미 저장된 이메일입니다."),

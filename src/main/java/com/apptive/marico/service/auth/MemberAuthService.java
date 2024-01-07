@@ -16,13 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.apptive.marico.entity.Role.RoleName.ROLE_MEMBER;
 import static com.apptive.marico.exception.ErrorCode.*;
-import static com.apptive.marico.exception.ErrorCode.INVALID_NICKNAME;
 
 @Service
 @Transactional
@@ -55,7 +51,7 @@ public class MemberAuthService {
 
     public String changePassword(Member member, String password, String code) {
         VerificationToken verificationToken = verificationTokenRepository.findByVerificationCode(code);
-        if (verificationToken == null) throw new CustomException(VERIFICATION_CODE_INVAILD);;
+        if (verificationToken == null) throw new CustomException(VERIFICATION_CODE_INVALID);;
         if(!verificationToken.getExpiryDate().isAfter(LocalDateTime.now())) {
             verificationTokenRepository.delete(verificationToken);
             throw new CustomException(VERIFICATION_CODE_TIMEOUT);
