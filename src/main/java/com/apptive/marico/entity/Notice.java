@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -27,4 +28,6 @@ public class Notice {
     @Column(name = "create_date")
     private LocalDateTime createDate;
 
+    @OneToMany(mappedBy = "notice", cascade = CascadeType.REMOVE)
+    private List<NoticeReadStatus> noticeReadStatusList = new ArrayList<>();
 }

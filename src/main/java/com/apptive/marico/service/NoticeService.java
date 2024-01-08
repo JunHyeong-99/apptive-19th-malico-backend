@@ -101,4 +101,13 @@ public class NoticeService {
         return authorities.contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
 
     }
+
+    public String deleteNotice(Principal principal, Long notice_id) {
+        if(!hasAdminRole(principal)) throw new CustomException(USER_NOT_ADMIN);
+        Optional<Member> member = memberRepository.findByUserId(principal.getName());
+        if(member.isEmpty()) throw new CustomException(USER_NOT_FOUND);
+        noticeReadStatusRepository.deleteByNoticeId(notice_id);
+        noticeRepository.deleteById(notice_id);
+        return "공지사항이 정상적으로 삭제 되었습니다.";
+    }
 }

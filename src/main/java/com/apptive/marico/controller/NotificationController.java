@@ -23,12 +23,17 @@ public class NotificationController {
 
     @GetMapping("/notice/{notice_id}")
     public ResponseEntity<?> loadNotice(Principal principal, @PathVariable Long notice_id) {
-        return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(noticeService.loadNotice(principal.getName(), notice_id)));
+        return ResponseEntity.ok(ApiUtils.success(noticeService.loadNotice(principal.getName(), notice_id)));
     }
 
     @PostMapping("/notice")
     public ResponseEntity<?> addNotice(Principal principal, @RequestBody NoticeDto noticeDto) {
-        return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(noticeService.addNotice(principal, noticeDto)));
+        return ResponseEntity.ok(ApiUtils.success(noticeService.addNotice(principal, noticeDto)));
+    }
+
+    @DeleteMapping("/notice/{notice_id}")
+    public ResponseEntity<?> deleteNotice(Principal principal, @PathVariable Long notice_id) {
+        return ResponseEntity.ok(ApiUtils.success(noticeService.deleteNotice(principal, notice_id)));
     }
 
 
