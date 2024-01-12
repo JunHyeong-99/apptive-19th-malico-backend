@@ -32,7 +32,7 @@ public class StylistMypageController {
 
     @PostMapping("/information")
     public ResponseEntity<?> editInf(Principal principal, @RequestBody StylistMypageEditDto stylistMypageEditDto) {
-        return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(stylistMypageService.editInformation(principal.getName(), stylistMypageEditDto)));
+        return ResponseEntity.ok(ApiUtils.success(stylistMypageService.editInformation(principal.getName(), stylistMypageEditDto)));
     }
 
     @GetMapping("/stylist-service")
@@ -42,7 +42,7 @@ public class StylistMypageController {
 
     @PostMapping("/stylist-service")
     public ResponseEntity<?> addService(Principal principal, @RequestBody StylistServiceDto stylistServiceDto) {
-        return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(stylistMypageService.addService(principal.getName(), stylistServiceDto)));
+        return ResponseEntity.ok(ApiUtils.success(stylistMypageService.addService(principal.getName(), stylistServiceDto)));
     }
 
     @GetMapping("/stylist-service/{service_id}")
@@ -52,7 +52,7 @@ public class StylistMypageController {
 
     @PatchMapping("/stylist-service/{service_id}")
     public ResponseEntity<?> editService(Principal principal, @PathVariable("service_id") Long service_id, @RequestBody StylistServiceDto stylistServiceDto) {
-        return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(stylistMypageService.editService(principal.getName(), service_id, stylistServiceDto)));
+        return ResponseEntity.ok(ApiUtils.success(stylistMypageService.editService(principal.getName(), service_id, stylistServiceDto)));
     }
 
     @GetMapping("/style")
@@ -62,21 +62,21 @@ public class StylistMypageController {
 
     @PostMapping("/style")
     public ResponseEntity<?> addMyStyle(Principal principal, @RequestBody StyleDto styleDto) {
-        return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(stylistMypageService.addStyle(principal.getName(), styleDto)));
+        return ResponseEntity.ok(ApiUtils.success(stylistMypageService.addStyle(principal.getName(), styleDto)));
     }
 
     @DeleteMapping("/style")
     public ResponseEntity<?> deleteMyStyle(Principal principal, @RequestBody DeleteStyleDto deleteStyleDto) {
-        return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(stylistMypageService.deleteStyle(principal.getName(), deleteStyleDto)));
+        return ResponseEntity.ok(ApiUtils.success(stylistMypageService.deleteStyle(principal.getName(), deleteStyleDto)));
     }
 
     @GetMapping("/password")
     public ResponseEntity<?> checkPassword(Principal principal, @RequestParam String currentPassword) {
-        return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(stylistMypageService.checkPassword(principal.getName(), currentPassword)));
+        return ResponseEntity.ok(ApiUtils.success(stylistMypageService.checkPassword(principal.getName(), currentPassword)));
     }
 
     @PatchMapping("/password")
     public ResponseEntity<?> changePassword(Principal principal, @RequestParam String newPassword) {
-        return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(stylistMypageService.changePassword(principal.getName(), newPassword)));
+        return ResponseEntity.ok(ApiUtils.success(stylistMypageService.changePassword(principal.getName(), newPassword)));
     }
 }

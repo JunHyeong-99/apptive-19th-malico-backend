@@ -28,12 +28,15 @@ public class StylistService {
 
     private int price;
 
-    @OneToMany(mappedBy = "stylistService")
+    @OneToMany(mappedBy = "stylistService", cascade = CascadeType.REMOVE)
     private List<ServiceCategory> serviceCategory = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "stylist_id")
     private Stylist stylist;
+
+    @OneToMany(mappedBy = "stylistService", cascade = CascadeType.REMOVE)
+    private List<ServiceInquiry> serviceInquiries = new ArrayList<>();
 
     public void editService(StylistServiceDto stylistServiceDto){
         this.serviceName = stylistServiceDto.getServiceName();

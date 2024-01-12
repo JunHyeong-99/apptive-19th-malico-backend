@@ -1,5 +1,6 @@
 package com.apptive.marico.repository;
 
+import com.apptive.marico.entity.Member;
 import com.apptive.marico.entity.StylistService;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,4 +18,5 @@ public interface StylistServiceRepository extends JpaRepository<StylistService, 
 
     @Query("SELECT s FROM StylistService s JOIN FETCH s.stylist WHERE s.id = :service_id")
     Optional<StylistService> findServiceWithStylistById(Long service_id);
+
 }
