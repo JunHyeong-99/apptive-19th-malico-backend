@@ -1,7 +1,7 @@
 package com.apptive.marico.controller;
 
-import com.apptive.marico.dto.member.MemberInformationDto;
 import com.apptive.marico.dto.member.MemberMypageDto;
+import com.apptive.marico.dto.mypage.MemberMypageEditDto;
 import com.apptive.marico.dto.mypage.PasswordDto;
 import com.apptive.marico.dto.mypage.LikedStylistListDto;
 import com.apptive.marico.service.MemberMypageService;
@@ -38,9 +38,18 @@ public class MemberMypageController {
      */
     // 조회
     @GetMapping("/information")
-    public ResponseEntity<MemberInformationDto> findInformation(Principal principal) {
-        return ResponseEntity.ok(memberMyPageService.findInformation(principal.getName()));
+    public ResponseEntity<MemberMypageEditDto> findInformation(Principal principal) {
+        return ResponseEntity.ok(memberMyPageService.getInformation(principal.getName()));
     }
+
+    // 수정
+    @PatchMapping("/information")
+    public ResponseEntity<MemberMypageEditDto> updateInformation(Principal principal, @RequestBody MemberMypageEditDto memberMypageEditDto) {
+        System.out.println(memberMypageEditDto.getBirthDate());
+
+        return ResponseEntity.ok(memberMyPageService.updateInformation(principal.getName(), memberMypageEditDto));
+    }
+
 
     // 현재 비밀번호가 일치한지 검사
     @GetMapping("/password")

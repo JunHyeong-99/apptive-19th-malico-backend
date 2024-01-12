@@ -1,13 +1,12 @@
 package com.apptive.marico.service;
 
-import com.apptive.marico.dto.member.MemberInformationDto;
 import com.apptive.marico.dto.member.MemberMypageDto;
 import com.apptive.marico.dto.mypage.LikedStylistDto;
 import com.apptive.marico.dto.mypage.LikedStylistListDto;
+import com.apptive.marico.dto.mypage.MemberMypageEditDto;
 import com.apptive.marico.entity.Like;
 import com.apptive.marico.entity.Member;
 import com.apptive.marico.entity.Stylist;
-import com.apptive.marico.entity.token.VerificationToken;
 import com.apptive.marico.exception.CustomException;
 import com.apptive.marico.repository.LikeRepository;
 import com.apptive.marico.repository.MemberRepository;
@@ -60,11 +59,28 @@ public class MemberMypageService {
         return LikedStylistListDto.toDto(likedStylistsDto);
     }
 
-    public MemberInformationDto findInformation(String userId) {
+    public MemberMypageEditDto getInformation(String userId) {
         // 닉네임, 성, 이메일
         Member member = memberRepository.findByUserId(userId).orElseThrow(
                 () -> new CustomException(USER_NOT_FOUND));
-        return MemberInformationDto.toDto(member);
+        return MemberMypageEditDto.toDto(member);
+    }
+
+    @Transactional
+    public MemberMypageEditDto updateInformation(String userId, MemberMypageEditDto memberMypageEditDto) {
+        Member originalMember = memberRepository.findByUserId(userId).orElseThrow(
+                () -> new CustomException(USER_NOT_FOUND));
+
+        Member updateMember = originalMember;
+
+        if (memberMypageEditDto.getNickname() != null)
+            updateMember.setNickname(memberMypageEditDto.getNickname());
+        if (memberMypageEditDto.getGender() != 0) updateMember.setGender(memberMypageEditDto.getGender());
+        if (memberMypageEditDto.getBirthDate() != null)
+            updateMember.setBirthDate(memberMypageEditDto.getBirthDate());
+
+        Member member = memberRepository.save(updateMember);
+        return MemberMypageEditDto.toDto(member);
     }
 
     public String CheckCurrentPassword(String userId, String password) {
