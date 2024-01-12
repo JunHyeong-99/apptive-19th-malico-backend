@@ -12,7 +12,7 @@ public interface StylistServiceRepository extends JpaRepository<StylistService, 
 
 
     @Query("SELECT s FROM StylistService s JOIN FETCH s.serviceCategory WHERE s.stylist.id = :stylist_id")
-    List<StylistService> findAllByStylist_id(Long stylist_id);
+    List<StylistService> findAllByStylistId(Long stylist_id);
 
     int countByStylist_id(Long stylist_id);
 

@@ -58,7 +58,7 @@ public class InquiryService {
                             .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
                     List<InquiryPreviewDto> inquiryPreviewDtoList = stylistServiceRepository
-                            .findAllByStylist_id(stylist.getId())
+                            .findAllByStylistId(stylist.getId())
                             .stream()
                             .map(inquiryRepository::findByStylistService)
                             .flatMap(List::stream)

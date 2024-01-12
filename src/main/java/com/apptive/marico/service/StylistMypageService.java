@@ -76,7 +76,7 @@ public class StylistMypageService {
         Stylist stylist = stylistRepository.findByUserId(userId)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
-        List<StylistService> serviceList = serviceRepository.findAllByStylist_id(stylist.getId());
+        List<StylistService> serviceList = serviceRepository.findAllByStylistId(stylist.getId());
 
         List<StylistServiceDto> stylistServiceDtoList = serviceList.stream()
                 .map(StylistServiceDto::toDto)
