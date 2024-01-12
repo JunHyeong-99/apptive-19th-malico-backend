@@ -15,9 +15,12 @@ import com.apptive.marico.service.auth.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -106,4 +109,27 @@ public class MemberMypageService {
 
         return "비밀번호가 변경되었습니다.";
     }
+
+    @Transactional
+    public String changeEmail(String userId, String newEmail) {
+        Member member = memberRepository.findByUserId(userId).orElseThrow(
+                () -> new CustomException(USER_NOT_FOUND));
+
+
+        member.setEmail(newEmail);
+        memberRepository.save(member);
+
+        return "이메일이 정상적으로 변경되었습니다.";
+    }
+
+    @Transactional
+    public String deleteMember(String userId) {
+        Member member = memberRepository.findByUserId(userId).orElseThrow(
+                () -> new CustomException(USER_NOT_FOUND));
+
+        memberRepository.delete(member);
+
+        return "회원 탈퇴가 정상적으로 완료되었습니다.";
+    }
+
 }

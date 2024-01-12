@@ -33,7 +33,7 @@ public class Member implements UserDetails {
     private String name;
 
     // userdatails의 username에 사용자의 email 값을 저장하고 싶은데, 변수명을 바꿔도 될까?
-    @Column(updatable = false,unique = true,nullable = false)
+    @Column(unique = true,nullable = false)
     private String email;
 
     @Column(updatable = false, unique = true, nullable = false)
