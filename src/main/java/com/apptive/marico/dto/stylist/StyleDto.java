@@ -1,8 +1,12 @@
 package com.apptive.marico.dto.stylist;
 
 import com.apptive.marico.entity.Style;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @Getter
@@ -18,5 +22,12 @@ public class StyleDto {
                 .image(style.getImage())
                 .category(style.getCategory())
                 .build();
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    public static class DtoList {
+        private List<StyleDto> styleDtoList = new ArrayList<>();
     }
 }

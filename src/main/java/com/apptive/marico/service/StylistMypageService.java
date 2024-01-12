@@ -154,12 +154,12 @@ public class StylistMypageService {
                 .build();
     }
 
-    public StyleListDto getStyle(String userId) {
+    public StyleDto.DtoList getStyle(String userId) {
         Optional<Stylist> stylist = stylistRepository.findByUserIdWithStyle(userId);
         if(stylist.isEmpty()) throw new CustomException(USER_NOT_FOUND);
         List<Style> styleList = stylist.get().getStyle();
         List<StyleDto> styleDtoList = styleList.stream().map(StyleDto::toDto).collect(Collectors.toList());
-        return StyleListDto.builder().styleDtoList(styleDtoList).build();
+        return StyleDto.DtoList.builder().styleDtoList(styleDtoList).build();
     }
 
     public String addStyle(String userId, StyleDto styleDto) {
