@@ -2,7 +2,6 @@ package com.apptive.marico.service;
 
 import com.apptive.marico.dto.stylistService.InquiryDto;
 import com.apptive.marico.dto.stylistService.InquiryPreviewDto;
-import com.apptive.marico.dto.stylistService.InquiryPreviewListDto;
 import com.apptive.marico.entity.Member;
 import com.apptive.marico.entity.ServiceInquiry;
 import com.apptive.marico.entity.Stylist;
@@ -51,10 +50,9 @@ public class InquiryService {
 //
 //    }
 
-    public InquiryPreviewListDto loadInquiryList (String userId) {
+    public InquiryPreviewDto.DtoList loadInquiryList (String userId) {
         Optional<Member> member = memberRepository.findByUserId(userId);
-
-        return member.map(m -> InquiryPreviewListDto.toDto(inquiryRepository.findByMember(m)))
+        return member.map(m -> InquiryPreviewDto.DtoList.toDto(inquiryRepository.findByMember(m)))
                 .orElseGet(() -> {
                     Stylist stylist = stylistRepository.findByUserId(userId)
                             .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
@@ -67,7 +65,7 @@ public class InquiryService {
                             .map(InquiryPreviewDto::toDto)
                             .collect(Collectors.toList());
 
-                    return InquiryPreviewListDto.builder()
+                    return InquiryPreviewDto.DtoList.builder()
                             .inquiryPreviewDtoList(inquiryPreviewDtoList)
                             .build();
                 });
