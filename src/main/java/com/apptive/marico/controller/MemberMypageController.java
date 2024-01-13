@@ -6,16 +6,20 @@ import com.apptive.marico.dto.mypage.MemberMypageEditDto;
 import com.apptive.marico.dto.mypage.PasswordDto;
 import com.apptive.marico.dto.mypage.LikedStylistListDto;
 import com.apptive.marico.dto.verificationToken.SendEmailResponseDto;
+import com.apptive.marico.exception.CustomException;
 import com.apptive.marico.service.MemberMypageService;
 import com.apptive.marico.service.VerificationTokenService;
 import com.apptive.marico.utils.ApiUtils;
 import com.apptive.marico.utils.ApiUtils.ApiSuccess;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.File;
 import java.security.Principal;
 
 @RestController
@@ -29,7 +33,13 @@ public class MemberMypageController {
     public ResponseEntity<MemberMypageDto> mypage(Principal principal) {
         return ResponseEntity.ok(memberMyPageService.mypage(principal.getName()));
     }
+
     // 프로필 사진 수정
+    @PatchMapping(value = "/profile-image", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> changeProfileImage(Principal principal, @RequestPart MultipartFile profileImage) {
+        return ResponseEntity.ok(memberMyPageService.changeProfileImage(principal.getName(), profileImage));
+
+    }
 
     // 관심 스타일리스트
     @GetMapping("/liked-stylist")
