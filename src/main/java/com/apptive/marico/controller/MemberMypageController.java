@@ -60,10 +60,10 @@ public class MemberMypageController {
 
     // 수정
     @PatchMapping("/information")
-    public ResponseEntity<MemberMypageEditDto> updateInformation(Principal principal, @RequestBody MemberMypageEditDto memberMypageEditDto) {
+    public ResponseEntity<ApiSuccess<Object>> updateInformation(Principal principal, @RequestBody MemberMypageEditDto memberMypageEditDto) {
         System.out.println(memberMypageEditDto.getBirthDate());
 
-        return ResponseEntity.ok(memberMyPageService.updateInformation(principal.getName(), memberMypageEditDto));
+        return ResponseEntity.ok(new ApiSuccess<>(memberMyPageService.updateInformation(principal.getName(), memberMypageEditDto)));
     }
 
     // 현재 비밀번호가 일치한지 검사

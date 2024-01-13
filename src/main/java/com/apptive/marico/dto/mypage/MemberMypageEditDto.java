@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 public class MemberMypageEditDto {
     private String nickname;
     private char gender;
+    private String email;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
 
@@ -28,6 +29,7 @@ public class MemberMypageEditDto {
         return MemberMypageEditDto.builder()
                 .nickname(member.getNickname())
                 .gender(member.getGender())
+                .email(member.getEmail())
                 .birthDate(member.getBirthDate())
                 .build();
     }

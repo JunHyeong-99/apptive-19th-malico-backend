@@ -84,7 +84,7 @@ public class MemberMypageService {
     }
 
     @Transactional
-    public MemberMypageEditDto updateInformation(String userId, MemberMypageEditDto memberMypageEditDto) {
+    public String updateInformation(String userId, MemberMypageEditDto memberMypageEditDto) {
         Member originalMember = memberRepository.findByUserId(userId).orElseThrow(
                 () -> new CustomException(USER_NOT_FOUND));
 
@@ -97,7 +97,7 @@ public class MemberMypageService {
             updateMember.setBirthDate(memberMypageEditDto.getBirthDate());
 
         Member member = memberRepository.save(updateMember);
-        return MemberMypageEditDto.toDto(member);
+        return "개인정보수정이 정상적으로 완료되었습니다.";
     }
 
     public String CheckCurrentPassword(String userId, String password) {
