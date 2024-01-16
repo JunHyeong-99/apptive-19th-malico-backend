@@ -19,8 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.apptive.marico.exception.ErrorCode.SERVICE_NOT_FOUND;
-import static com.apptive.marico.exception.ErrorCode.USER_NOT_FOUND;
+import static com.apptive.marico.exception.ErrorCode.*;
 
 @Service
 @Transactional
@@ -69,5 +68,24 @@ public class InquiryService {
                             .inquiryPreviewDtoList(inquiryPreviewDtoList)
                             .build();
                 });
+    }
+
+    public InquiryDto loadMemberInquiry(String userId, Long inquiryId) {
+        Member member = memberRepository.findByUserId(userId)
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+        ServiceInquiry serviceInquiry = inquiryRepository.findById(inquiryId)
+                .orElseThrow(() -> new CustomException(INQUIRY_NOT_FOUND));
+        if(serviceInquiry.getMember() != member) {
+            throw new CustomException(USER_AND_INQUIRY_NOT_MATCH);
+        }
+        return InquiryDto.toDto(serviceInquiry);
+    }
+    public InquiryDto loadStylistInquiry(String userId, Long inquiryId) {
+        List<StylistService> stylistServiceList = stylistServiceRepository.findAllByStylistUserId(userId);
+        ServiceInquiry serviceInquiry = inquiryRepository.findById(inquiryId)
+                .orElseThrow(() -> new CustomException(INQUIRY_NOT_FOUND));
+        StylistService stylistService = serviceInquiry.getStylistService();
+        if (!stylistServiceList.contains(stylistService)) throw new CustomException(USER_AND_INQUIRY_NOT_MATCH);
+        return InquiryDto.toDto(serviceInquiry);
     }
 }

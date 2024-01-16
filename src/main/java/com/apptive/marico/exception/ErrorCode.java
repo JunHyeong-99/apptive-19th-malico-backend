@@ -12,6 +12,7 @@ public enum ErrorCode {
     INVALID_PASSWORD(400, "비밀번호는 영문, 숫자, 특수문자 포함 8~20자 이내이어야 합니다."),
     INVALID_NICKNAME(400, "닉네임은 한글, 영문, 숫자 중 2~10자 이내이어야 합니다."),
     ID_OR_PASSWORD_NOT_MATCH(400, "아이디 혹은 비밀번호가 틀렸습니다."),
+    USER_AND_INQUIRY_NOT_MATCH(400, "등록하신 문의사항이 아닙니다."),
 
 
     VERIFICATION_CODE_INVALID(401, "발급 코드가 유효하지 않습니다."),
@@ -32,6 +33,7 @@ public enum ErrorCode {
     NOTICE_NOT_FOUND(404, "존재하지 않는 공지사항합니다."),
     TOKEN_NOT_FOUND(404, "존재하지 않는 TOKEN입니다."),
     VALID_ACCESS_TOKEN(404, "ACCESS TOKEN이 존재하지 않거나 기한이 초과하지 않았습니다."),
+    INQUIRY_NOT_FOUND(404, "존재하지 않는 문의사항입니다."),
 
     //409 CONFLICT 중복된 리소스
     ALREADY_SAVED_EMAIL(409, "이미 저장된 이메일입니다."),

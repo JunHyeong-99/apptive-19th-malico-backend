@@ -22,7 +22,17 @@ public class ServiceInquiryController {
     }
 
     @GetMapping
-    public ResponseEntity<?> loadInquiry(Principal principal) {
+    public ResponseEntity<?> loadInquiryList(Principal principal) {
         return ResponseEntity.ok(ApiUtils.success(inquiryService.loadInquiryList(principal.getName())));
+    }
+
+    @GetMapping("/stylist/{inquiry_id}")
+    public ResponseEntity<?> loadStylistInquiry(Principal principal, @PathVariable Long inquiry_id) {
+        return ResponseEntity.ok(ApiUtils.success(inquiryService.loadStylistInquiry(principal.getName(), inquiry_id)));
+    }
+
+    @GetMapping("/member/{inquiry_id}")
+    public ResponseEntity<?> loadMemberInquiry(Principal principal, @PathVariable Long inquiry_id) {
+        return ResponseEntity.ok(ApiUtils.success(inquiryService.loadMemberInquiry(principal.getName(), inquiry_id)));
     }
 }

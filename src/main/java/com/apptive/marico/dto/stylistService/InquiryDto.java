@@ -2,6 +2,7 @@ package com.apptive.marico.dto.stylistService;
 
 
 import com.apptive.marico.dto.stylist.service.StylistServiceDto;
+import com.apptive.marico.entity.ServiceInquiry;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -25,5 +26,14 @@ public class InquiryDto {
         private String title;
         private String content;
         private List<String> img = new ArrayList<>();
+    }
+
+    public static InquiryDto toDto(ServiceInquiry serviceInquiry) {
+        return InquiryDto.builder()
+                .service_id(serviceInquiry.getId())
+                .title(serviceInquiry.getTitle())
+                .content(serviceInquiry.getContent())
+                .img(serviceInquiry.getInquiryImg())
+                .build();
     }
 }

@@ -18,7 +18,6 @@ import com.apptive.marico.service.auth.CustomUserDetailsService;
 import com.apptive.marico.service.auth.MemberAuthService;
 import com.apptive.marico.service.auth.StylistAuthService;
 import com.apptive.marico.utils.ApiUtils;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

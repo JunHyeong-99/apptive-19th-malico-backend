@@ -14,6 +14,8 @@ public interface StylistServiceRepository extends JpaRepository<StylistService, 
     @Query("SELECT s FROM StylistService s JOIN FETCH s.serviceCategory WHERE s.stylist.id = :stylist_id")
     List<StylistService> findAllByStylistId(Long stylist_id);
 
+    @Query("SELECT s FROM StylistService s JOIN FETCH s.serviceCategory WHERE s.stylist.userId = :userId")
+    List<StylistService> findAllByStylistUserId(String userId);
     int countByStylist_id(Long stylist_id);
 
     @Query("SELECT s FROM StylistService s JOIN FETCH s.stylist WHERE s.id = :service_id")
