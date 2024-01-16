@@ -35,10 +35,19 @@ public class VerificationTokenService {
 
 
     public String createVerificationTokenForSign(String email) {
-
         if (isEmailRegistered(email)) {
             throw new CustomException(ALREADY_SAVED_EMAIL);
         }
+
+        VerificationToken token = VerificationToken.create(email);
+        verificationTokenRepository.save(token);
+        smtpEmailService.sendVerificationCode(email, token.getVerificationCode());
+        return "인증 번호가 전송 되었습니다.";
+    }
+
+    public String createVerificationTokenForChangeEmail(String email) {
+        if(!memberRepository.existsByEmail(email))
+            throw new CustomException(ALREADY_SAVED_EMAIL);
 
         VerificationToken token = VerificationToken.create(email);
         verificationTokenRepository.save(token);

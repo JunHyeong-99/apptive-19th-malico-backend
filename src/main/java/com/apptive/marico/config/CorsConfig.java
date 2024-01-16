@@ -17,7 +17,7 @@ public class CorsConfig {
         final CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of("server.cla6sha.de:80"));
+        config.setAllowedOrigins(List.of("server.cla6sha.de:80", "http://server.cla6sha.de/"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setExposedHeaders(List.of("*"));

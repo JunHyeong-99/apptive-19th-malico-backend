@@ -13,6 +13,7 @@ public enum ErrorCode {
     INVALID_NICKNAME(400, "닉네임은 한글, 영문, 숫자 중 2~10자 이내이어야 합니다."),
     ID_OR_PASSWORD_NOT_MATCH(400, "아이디 혹은 비밀번호가 틀렸습니다."),
     USER_AND_INQUIRY_NOT_MATCH(400, "등록하신 문의사항이 아닙니다."),
+    IMAGE_NOT_EXIST(404, "이미지 파일이 존재하지 않습니다."),
 
 
     VERIFICATION_CODE_INVALID(401, "발급 코드가 유효하지 않습니다."),
@@ -45,7 +46,8 @@ public enum ErrorCode {
 
     //500 INTERNAL SERVER ERROR
     INTERNAL_SERVER_ERROR(500, "서버 에러입니다. 서버 팀에 연락주세요!"),
-    ROLE_NOT_FOUND(500, "존재하지 않는 ROLE입니다.");
+    ROLE_NOT_FOUND(500, "존재하지 않는 ROLE입니다."),
+    FILE_UPLOAD_ERROR(500, "파일 업로드에 실패했습니다.");
 
     private final int status;
     private final String message;

@@ -2,7 +2,8 @@ spring:
   config:
     import:
       - classpath:/application-jwt-secret.yml
-      #- classpath:/application-db.yml
+      - classpath:/application-s3.yml
+#      - classpath:/application-db.yml
   h2:
     console:
       enabled: true
