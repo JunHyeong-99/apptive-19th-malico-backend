@@ -209,7 +209,7 @@ public class StylistMypageService {
         return false;
     }
 
-    public String checkPassword(String userId, String currentPassword) {
+    public String CheckCurrentPassword(String userId, String currentPassword) {
         Stylist stylist = stylistRepository.findByUserId(userId).orElseThrow(
                 () -> new CustomException(USER_NOT_FOUND));
 
@@ -229,5 +229,22 @@ public class StylistMypageService {
         stylistRepository.save(stylist);
 
         return "비밀번호가 변경되었습니다.";
+    }
+
+
+    public String changeEmail(String userId, String newEmail) {
+        Stylist stylist = stylistRepository.findByUserId(userId).orElseThrow(
+                () -> new CustomException(USER_NOT_FOUND));
+        stylist.changeEmail(newEmail);
+        stylistRepository.save(stylist);
+        return "이메일이 정상적으로 변경되었습니다.";
+    }
+    public String deleteStylist(String userId) {
+        Stylist stylist = stylistRepository.findByUserId(userId).orElseThrow(
+                () -> new CustomException(USER_NOT_FOUND));
+
+        stylistRepository.delete(stylist);
+
+        return "회원 탈퇴가 정상적으로 완료되었습니다.";
     }
 }

@@ -1,11 +1,15 @@
 package com.apptive.marico.controller;
 
+import com.apptive.marico.dto.findId.SendEmailRequestDto;
+import com.apptive.marico.dto.mypage.PasswordDto;
 import com.apptive.marico.dto.stylist.DeleteStyleDto;
 import com.apptive.marico.dto.stylist.StyleDto;
 import com.apptive.marico.dto.stylist.StylistMypageDto;
 import com.apptive.marico.dto.stylist.StylistMypageEditDto;
 import com.apptive.marico.dto.stylist.service.StylistServiceDto;
+import com.apptive.marico.dto.verificationToken.SendEmailResponseDto;
 import com.apptive.marico.service.StylistMypageService;
+import com.apptive.marico.service.VerificationTokenService;
 import com.apptive.marico.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +22,7 @@ import java.security.Principal;
 @RequiredArgsConstructor
 public class StylistMypageController {
     private final StylistMypageService stylistMypageService;
+    private final VerificationTokenService verificationTokenService;
 
     // 마이페이지 조회
     @GetMapping
@@ -72,11 +77,36 @@ public class StylistMypageController {
 
     @GetMapping("/password")
     public ResponseEntity<?> checkPassword(Principal principal, @RequestParam String currentPassword) {
-        return ResponseEntity.ok(ApiUtils.success(stylistMypageService.checkPassword(principal.getName(), currentPassword)));
+        return ResponseEntity.ok(ApiUtils.success(stylistMypageService.CheckCurrentPassword(principal.getName(), currentPassword)));
     }
 
     @PatchMapping("/password")
     public ResponseEntity<?> changePassword(Principal principal, @RequestParam String newPassword) {
         return ResponseEntity.ok(ApiUtils.success(stylistMypageService.changePassword(principal.getName(), newPassword)));
+    }
+
+    @PostMapping("/email/verification-code")
+    public ResponseEntity<SendEmailResponseDto> createVerificationCode(@RequestBody SendEmailRequestDto sendEmailRequestDto) {
+        return ResponseEntity.ok(new SendEmailResponseDto(verificationTokenService.createVerificationTokenForSign(sendEmailRequestDto.getEmail())));
+    }
+
+    @GetMapping("/email/verification-code")
+    public ResponseEntity<?> checkVerificationCode(Principal principal, @RequestParam String code) {
+        return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(verificationTokenService.verifyUserEmailForSign(code)));
+    }
+
+    @PostMapping("/email")
+    public ResponseEntity<?> changeEmail(Principal principal, @RequestBody SendEmailRequestDto sendEmailRequestDto) {
+        return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(stylistMypageService.changeEmail(principal.getName(), sendEmailRequestDto.getEmail())));
+    }
+
+    @GetMapping("/delete")
+    public ResponseEntity<?> checkPasswordForDelete(Principal principal, @RequestBody PasswordDto passwordDto) {
+        return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(stylistMypageService.CheckCurrentPassword(principal.getName(), passwordDto.getPassword())));
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteStylist(Principal principal) {
+        return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(stylistMypageService.deleteStylist(principal.getName())));
     }
 }

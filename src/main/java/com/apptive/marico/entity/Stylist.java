@@ -89,6 +89,10 @@ public class Stylist implements UserDetails {
         this.setState(stylistMypageEditDto.getState());
         this.setChat_link(stylistMypageEditDto.getChat_link());
     }
+
+    public void changeEmail(String email) {
+        this.email = email;
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()
