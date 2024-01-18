@@ -1,7 +1,5 @@
-package com.apptive.marico.dto.mypage;
+package com.apptive.marico.dto.mypage.member;
 
-import com.apptive.marico.dto.member.MemberMypageDto;
-import com.apptive.marico.entity.Member;
 import com.apptive.marico.entity.Stylist;
 import lombok.Builder;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.apptive.marico.dto.member;
+package com.apptive.marico.dto.mypage.member;
 
 import com.apptive.marico.entity.Member;
 import lombok.AllArgsConstructor;
@@ -21,7 +21,7 @@ public class MemberRequestDto {
     private String nickname;
     private char gender;
     private LocalDate birthDate;
-    private String residence;
+    private String city;
     private String profile_image;
 
 
@@ -36,7 +36,7 @@ public class MemberRequestDto {
                 .nickname(nickname)
                 .gender(gender)
                 .birthDate(birthDate)
-                .residence(residence)
+                .city(city)
                 .profileImage(profile_image)
                 .build();
     }
