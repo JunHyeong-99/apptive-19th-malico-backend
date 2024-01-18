@@ -1,7 +1,7 @@
 package com.apptive.marico.controller;
 
 import com.apptive.marico.dto.findId.SendEmailRequestDto;
-import com.apptive.marico.dto.mypage.PasswordDto;
+import com.apptive.marico.dto.mypage.member.PasswordDto;
 import com.apptive.marico.dto.stylist.DeleteStyleDto;
 import com.apptive.marico.dto.stylist.StyleDto;
 import com.apptive.marico.dto.stylist.StylistMypageDto;

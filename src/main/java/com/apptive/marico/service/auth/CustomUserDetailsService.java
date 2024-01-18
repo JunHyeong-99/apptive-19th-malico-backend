@@ -4,6 +4,7 @@ import com.apptive.marico.dto.LoginDto;
 import com.apptive.marico.dto.mypage.member.MemberRequestDto;
 import com.apptive.marico.dto.mypage.member.MemberResponseDto;
 import com.apptive.marico.dto.stylist.StylistRequestDto;
+import com.apptive.marico.dto.token.TokenDto;
 import com.apptive.marico.dto.token.TokenRequestDto;
 import com.apptive.marico.dto.token.TokenResponseDto;
 import com.apptive.marico.entity.Member;
@@ -61,7 +62,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Transactional
-    public TokenResponseDto login(LoginDto loginDto) {
+    public TokenDto login(LoginDto loginDto) {
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
         isUserExist(loginDto.getUserId());
         UsernamePasswordAuthenticationToken authenticationToken = loginDto.toAuthentication();
@@ -71,18 +72,29 @@ public class CustomUserDetailsService implements UserDetailsService {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
-        TokenResponseDto tokenResDto = tokenProvider.generateTokenDto(authentication);
+        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
 
         // 4. RefreshToken 저장
         RefreshToken refreshToken = RefreshToken.builder()
                 .key(authentication.getName())
-                .value(tokenResDto.getRefreshToken())
+                .value(tokenDto.getRefreshToken())
                 .build();
 
         refreshTokenRepository.save(refreshToken);
 
         // 5. 토큰 발급
-        return tokenResDto;
+        return tokenDto;
+    }
+
+    public TokenDto refreshToken(String accessToken,String refreshToken) {
+        if(!tokenProvider.validateTokenExceptExpiration(accessToken)) throw new CustomException(VALID_ACCESS_TOKEN);
+        if (tokenProvider.validateToken(refreshToken)) {
+            Authentication authentication = tokenProvider.getAuthentication(refreshToken);
+            return tokenProvider.reissueTokenDto(authentication, refreshToken);
+        }
+        else {
+            throw new CustomException(TOKEN_NOT_FOUND);
+        }
     }
 
     public void isUserExist(String userId) {
