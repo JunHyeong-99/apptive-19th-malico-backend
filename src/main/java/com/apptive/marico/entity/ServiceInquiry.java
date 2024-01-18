@@ -48,5 +48,6 @@ public class ServiceInquiry {
     public void addAnswer(String responseContent, List<String> responseImg) {
         this.responseContent = responseContent;
         this.responseImg = responseImg;
+        this.answerComplete = true;
     }
 }

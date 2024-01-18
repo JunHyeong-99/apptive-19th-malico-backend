@@ -20,6 +20,10 @@ public class InquiryDto {
     private String title;
     private String content;
     private List<String> img = new ArrayList<>();
+    private String responseContent;
+    private List<String> responseImg = new ArrayList<>();
+
+    private boolean answerComplete = false;
 
 
     @Builder
@@ -45,6 +49,9 @@ public class InquiryDto {
                 .title(serviceInquiry.getTitle())
                 .content(serviceInquiry.getContent())
                 .img(serviceInquiry.getInquiryImg())
+                .responseContent(serviceInquiry.getResponseContent())
+                .responseImg(serviceInquiry.getResponseImg())
+                .answerComplete(serviceInquiry.isAnswerComplete())
                 .build();
     }
 }

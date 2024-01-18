@@ -35,7 +35,7 @@ public class ServiceInquiryController {
     }
 
     @PostMapping(value = "/stylist/{inquiry_id}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> addStylistInquiry(Principal principal,@PathVariable Long inquiry_id, @RequestPart InquiryDto.InquiryAnswerContentDto answerContentDto ,@RequestPart List<MultipartFile> answerImgs) {
+    public ResponseEntity<?> addStylistInquiryAnswer(Principal principal,@PathVariable Long inquiry_id, @RequestPart InquiryDto.InquiryAnswerContentDto answerContentDto ,@RequestPart List<MultipartFile> answerImgs) {
         System.out.println(answerImgs.get(0).getOriginalFilename());
         System.out.println(answerContentDto.getResponseContent());
         return ResponseEntity.ok(ApiUtils.success(inquiryService.addInquiryAnswer(principal.getName(), inquiry_id, answerContentDto.getResponseContent(), answerImgs)));
