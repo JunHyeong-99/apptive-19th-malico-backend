@@ -1,10 +1,8 @@
-package com.apptive.marico.dto.member;
+package com.apptive.marico.dto.mypage.member;
 
 import com.apptive.marico.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.LocalDate;
 
 @Builder
 @Getter

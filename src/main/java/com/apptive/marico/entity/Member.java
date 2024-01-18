@@ -1,6 +1,5 @@
 package com.apptive.marico.entity;
 
-import com.apptive.marico.entity.token.VerificationToken;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,9 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
@@ -50,9 +47,40 @@ public class Member implements UserDetails {
 
     private LocalDate birthDate;
 
-    private String residence;
+    // 도시
+    private String city; // 필수
+
+    // 구
+    private String state; // 필수
 
     private String profileImage;
+
+    private String height; // 필수
+
+    private String weight; // 필수
+
+    @ManyToMany
+    @JoinTable(
+            name = "member_style",
+            joinColumns = @JoinColumn(name = "member_id"),
+            inverseJoinColumns = @JoinColumn(name = "style_id"))
+    private List<Style> preferredStyles = new ArrayList<>(); // 필수
+
+    // 체형 사진
+    private String bodyShapeImages; // 필수
+
+    // 나의 스타일
+    @OneToMany(mappedBy = "member" , cascade = CascadeType.ALL)
+    private List<MyStyle> myStyles = new ArrayList<>();
+
+    // 참고 사진
+    @OneToMany(mappedBy = "member" , cascade = CascadeType.ALL)
+    private List<ReferenceImage> referenceImages = new ArrayList<>();
+
+    // 참고 사항
+    private String note; // 필수
+
+
 
 
     @Column(nullable = false)

@@ -1,9 +1,7 @@
-package com.apptive.marico.dto.mypage;
+package com.apptive.marico.dto.mypage.member;
 
 
-import com.apptive.marico.dto.CareerDto;
 import com.apptive.marico.entity.Member;
-import com.apptive.marico.entity.Stylist;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,8 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Builder
 @Getter

@@ -3,6 +3,9 @@ package com.apptive.marico.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Builder
 @Getter
@@ -23,4 +26,7 @@ public class Style {
     @ManyToOne
     @JoinColumn(name = "stylist_id")
     private Stylist stylist;
+
+    @ManyToMany(mappedBy = "preferredStyles")
+    private List<Member> members = new ArrayList<>();
 }
