@@ -1,25 +1,15 @@
-package com.apptive.marico.service;
+package com.apptive.marico.service.auth;
 
-import com.apptive.marico.dto.LoginDto;
 import com.apptive.marico.dto.member.MemberRequestDto;
 import com.apptive.marico.dto.member.MemberResponseDto;
-import com.apptive.marico.dto.token.TokenRequestDto;
-import com.apptive.marico.dto.token.TokenResponseDto;
 import com.apptive.marico.entity.Member;
 import com.apptive.marico.entity.Role;
-import com.apptive.marico.entity.Stylist;
-import com.apptive.marico.entity.token.RefreshToken;
 import com.apptive.marico.entity.token.VerificationToken;
 import com.apptive.marico.exception.CustomException;
-import com.apptive.marico.jwt.TokenProvider;
 import com.apptive.marico.repository.MemberRepository;
-import com.apptive.marico.repository.RefreshTokenRepository;
 import com.apptive.marico.repository.RoleRepository;
 import com.apptive.marico.repository.VerificationTokenRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,11 +34,12 @@ public class MemberAuthService {
 
     @Transactional
     public MemberResponseDto signup(MemberRequestDto memberRequestDto) {
-
-        customUserDetailsService.checkEmailAvailability(memberRequestDto.getEmail());
+        // 유효성 검사
+        customUserDetailsService.checkAvailability(memberRequestDto);
 
         Role userRole = roleRepository.findByName(ROLE_MEMBER).orElseThrow(
                 () -> new CustomException(ROLE_NOT_FOUND));
+
 
         Member member = memberRequestDto.toMember(passwordEncoder);
         member.setRoles(Collections.singleton(userRole));
@@ -56,14 +47,17 @@ public class MemberAuthService {
         return MemberResponseDto.toDto(memberRepository.save(member));
     }
 
-    public String changePassword(Member member, String password, String code) throws Exception{
+
+
+    public String changePassword(Member member, String password, String code) {
         VerificationToken verificationToken = verificationTokenRepository.findByVerificationCode(code);
-        if (verificationToken == null) return "인증번호가 일치하지 않습니다.";
+        if (verificationToken == null) throw new CustomException(VERIFICATION_CODE_INVALID);;
         if(!verificationToken.getExpiryDate().isAfter(LocalDateTime.now())) {
             verificationTokenRepository.delete(verificationToken);
-            return "인증 시간이 초과 되었습니다.";
+            throw new CustomException(VERIFICATION_CODE_TIMEOUT);
         }
-        if(member == null) throw new Exception("changePassword(),member가 조회되지 않음");
+        if(member == null) throw new CustomException(MEMBER_NOT_FOUND);
+        verificationTokenRepository.delete(verificationToken);
         member.setPassword(passwordEncoder.encode(password));
         memberRepository.save(member);
         return "비밀번호가 변경되었습니다.";

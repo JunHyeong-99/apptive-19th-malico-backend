@@ -1,22 +1,18 @@
 package com.apptive.marico.service;
 
 
-import com.apptive.marico.dto.findId.UserFindIdResponseDto;
 import com.apptive.marico.entity.Member;
 import com.apptive.marico.entity.Stylist;
-import com.apptive.marico.entity.UserType;
 import com.apptive.marico.entity.token.VerificationToken;
 import com.apptive.marico.exception.CustomException;
 import com.apptive.marico.repository.MemberRepository;
 import com.apptive.marico.repository.StylistRepository;
 import com.apptive.marico.repository.VerificationTokenRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
 
 import static com.apptive.marico.exception.ErrorCode.*;
 
@@ -39,14 +35,23 @@ public class VerificationTokenService {
 
 
     public String createVerificationTokenForSign(String email) {
-
         if (isEmailRegistered(email)) {
             throw new CustomException(ALREADY_SAVED_EMAIL);
         }
 
         VerificationToken token = VerificationToken.create(email);
         verificationTokenRepository.save(token);
-        smtpEmailService.sendVerificationCode(email, token.getVerificationCode());//TODO: 아이디나 비밀번호를 찾는 로직과는 다르게 구성할것.
+        smtpEmailService.sendVerificationCode(email, token.getVerificationCode());
+        return "인증 번호가 전송 되었습니다.";
+    }
+
+    public String createVerificationTokenForChangeEmail(String email) {
+        if(!memberRepository.existsByEmail(email))
+            throw new CustomException(ALREADY_SAVED_EMAIL);
+
+        VerificationToken token = VerificationToken.create(email);
+        verificationTokenRepository.save(token);
+        smtpEmailService.sendVerificationCode(email, token.getVerificationCode());
         return "인증 번호가 전송 되었습니다.";
     }
 
@@ -55,32 +60,48 @@ public class VerificationTokenService {
     }
 
     // 인증 코드가 유효하면 userEmail를 리턴
-    public String returnUserEmail(String token)  {
+    public String returnUserId(String token)  {
         VerificationToken verificationToken = verificationTokenRepository.findByVerificationCode(token);
-        return checkTokenAndGetEmail(verificationToken);
+        if (checkToken(verificationToken)) {
+            Optional<Member> member = memberRepository.findByEmail(verificationToken.getEmail());
+            Optional<Stylist> stylist = stylistRepository.findByEmail(verificationToken.getEmail());
+            if (member.isPresent()) {
+                return member.get().getUserId();
+            }
+            else if (stylist.isPresent()) {
+                return stylist.get().getUserId();
+            }
+            else throw new CustomException(USER_NOT_FOUND);
+        }
+        throw new CustomException(VERIFICATION_CODE_INVALID);
+    }
+
+    public String checkTokenAndSetExpiryDate(String Code) {
+        VerificationToken verificationToken = verificationTokenRepository.findByVerificationCode(Code);
+
+        if (checkToken(verificationToken)) {
+            verificationToken.setExpiryDate(LocalDateTime.now().plusMinutes(30));
+            verificationTokenRepository.save(verificationToken);
+            return "이메일 인증에 성공했습니다 ";
+        }
+        else return "발급 코드가 유효하지 않습니다.";
+    }
+
+    public String verifyUserEmailForSign(String token)  {
+        VerificationToken verificationToken = verificationTokenRepository.findByVerificationCode(token);
+        if (checkToken(verificationToken)) {
+            return "이메일 인증에 성공했습니다.";
+        }
+        else {
+            return "이메일 인증에 실패했습니다.";
+        }
 
     }
 
-//    public boolean verifyUserEmailForIdOrPwd(String Code) {
-//        VerificationToken verificationToken = verificationTokenRepository.findByVerificationCode(Code);
-//
-//        if (checkToken(verificationToken)) {
-//            verificationToken.setExpiryDate(LocalDateTime.now().plusMinutes(30));
-//            verificationTokenRepository.save(verificationToken);
-//            return true;
-//        }
-//        else return false;
-//    }
 
-    public boolean verifyUserEmailForSign(String token)  {
-        VerificationToken verificationToken = verificationTokenRepository.findByVerificationCode(token);
-        return checkTokenAndGetEmail(verificationToken).isEmpty();
-    }
-
-
-    public String checkTokenAndGetEmail(VerificationToken verificationToken) {
+    public boolean checkToken(VerificationToken verificationToken) {
         if(verificationToken == null) {
-            throw new CustomException(CODE_NOT_MATCH);
+            throw new CustomException(VERIFICATION_CODE_INVALID);
         }
         //시간이 지난 경우
         if(!verificationToken.getExpiryDate().isAfter(LocalDateTime.now())) {
@@ -93,7 +114,7 @@ public class VerificationTokenService {
         }
         verificationTokenRepository.delete(verificationToken);
 
-        return email;
+        return true;
     }
 
 }

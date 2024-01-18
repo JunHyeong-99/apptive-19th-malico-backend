@@ -1,5 +1,6 @@
 package com.apptive.marico.entity;
 
+import com.apptive.marico.dto.stylist.StylistMypageEditDto;
 import com.apptive.marico.entity.token.VerificationToken;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,9 +12,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
@@ -48,23 +47,28 @@ public class Stylist implements UserDetails {
     @Column(nullable = false)
     private char gender;
 
-    @Column(nullable = false)
     private LocalDate birthDate;
 
-    @Column(nullable = false)
-    private String residence;
+    private String city;
 
-    @Column(nullable = true)
+    private String state;
+
     private String profileImage;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "education_id")
-    private Education education;
+    private String oneLineIntroduction;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "career_id")
-    private Career career;
+    private String stylistIntroduction;
 
+    private String chat_link;
+
+    @OneToMany(mappedBy = "stylist" , cascade = CascadeType.ALL, orphanRemoval = true) // 연결이 끊어진 career는 자동 삭제
+    private List<Career> career;
+
+    @OneToMany(mappedBy = "stylist", orphanRemoval = true) // 연결이 끊어진 스타일은 자동 삭제
+    private List<Style> style = new ArrayList<>();
+
+    @OneToMany(mappedBy = "stylist", orphanRemoval = true)
+    private List<NoticeReadStatus> noticeReadStatuses = new ArrayList<>();
 
     @Column(nullable = false)
     private boolean enabled;
@@ -76,6 +80,19 @@ public class Stylist implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    public void editStylist(StylistMypageEditDto stylistMypageEditDto) {
+        this.setProfileImage(stylistMypageEditDto.getProfile_image());
+        this.setNickname(stylistMypageEditDto.getNickname());
+        this.setOneLineIntroduction(stylistMypageEditDto.getOneLineIntroduction());
+        this.setStylistIntroduction(stylistMypageEditDto.getStylistIntroduction());
+        this.setCity(stylistMypageEditDto.getCity());
+        this.setState(stylistMypageEditDto.getState());
+        this.setChat_link(stylistMypageEditDto.getChat_link());
+    }
+
+    public void changeEmail(String email) {
+        this.email = email;
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()
@@ -87,7 +104,7 @@ public class Stylist implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.email;
+        return this.userId;
     }
 
     //    GrantedAuthority 객체를 생성할 때 문자열 변환이 필요하지 않기 때문에 유연성이 높아지며, roles 필드를 추가적으로 변경해야 할 경우, 해당 필드만 수정하면 되므로 유지보수가 용이

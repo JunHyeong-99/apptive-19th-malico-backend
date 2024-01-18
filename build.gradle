@@ -32,6 +32,7 @@ dependencies {
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	implementation 'org.springframework.boot:spring-boot-starter'
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
@@ -49,6 +50,17 @@ dependencies {
 
 	//메일
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	//ModelMapper
+	implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.8'
+
+	// AWS S3
+	implementation "com.amazonaws:aws-java-sdk-s3:1.12.281"
+
+	// 이미지
+	implementation 'commons-io:commons-io:2.6'
+	implementation 'org.apache.commons:commons-lang3:3.0'
+
 }
 
 tasks.named('test') {

@@ -1,7 +1,6 @@
 package com.apptive.marico.entity.token;
 
 
-import com.apptive.marico.entity.UserType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,6 +10,7 @@ import java.util.UUID;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "verificationToken")
 public class VerificationToken {

@@ -1,8 +1,8 @@
-package com.apptive.marico.service;
+package com.apptive.marico.service.auth;
 
 import com.apptive.marico.dto.LoginDto;
 import com.apptive.marico.dto.token.TokenRequestDto;
-import com.apptive.marico.dto.token.TokenResponseDto;
+import com.apptive.marico.dto.token.TokenDto;
 import com.apptive.marico.entity.token.RefreshToken;
 import com.apptive.marico.jwt.TokenProvider;
 import com.apptive.marico.repository.RefreshTokenRepository;
@@ -20,7 +20,7 @@ public class UserAuthService {
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
     @Transactional
-    public TokenResponseDto login(LoginDto loginDto) {
+    public TokenDto login(LoginDto loginDto) {
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = loginDto.toAuthentication();
 
@@ -29,7 +29,7 @@ public class UserAuthService {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
-        TokenResponseDto tokenResDto = tokenProvider.generateTokenDto(authentication);
+        TokenDto tokenResDto = tokenProvider.generateTokenDto(authentication);
 
         // 4. RefreshToken 저장
         RefreshToken refreshToken = RefreshToken.builder()

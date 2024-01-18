@@ -11,9 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
@@ -32,12 +30,11 @@ public class Member implements UserDetails {
     @Column(nullable = false)
     private String name;
 
-    // userdatails의 username에 사용자의 email 값을 저장하고 싶은데, 변수명을 바꿔도 될까?
     @Column(updatable = false,unique = true,nullable = false)
     private String email;
 
     @Column(updatable = false, unique = true, nullable = false)
-    private String userId;
+    private String  userId;
 
     @Column(nullable = false)
     private String password;
@@ -48,14 +45,14 @@ public class Member implements UserDetails {
     @Column(nullable = false)
     private char gender;
 
-    @Column(nullable = false)
     private LocalDate birthDate;
 
-    @Column(nullable = false)
     private String residence;
 
-    @Column(nullable = true)
     private String profileImage;
+
+    @OneToMany(mappedBy = "member", orphanRemoval = true)
+    private List<NoticeReadStatus> noticeReadStatuses = new ArrayList<>();
 
 
     @Column(nullable = false)
@@ -77,9 +74,9 @@ public class Member implements UserDetails {
     }
 
 
-    @Override //userEmail을 리턴한다.
+    @Override //userId을 리턴한다.
     public String getUsername() {
-        return this.email;
+        return this.userId;
     }
 //    GrantedAuthority 객체를 생성할 때 문자열 변환이 필요하지 않기 때문에 유연성이 높아지며, roles 필드를 추가적으로 변경해야 할 경우, 해당 필드만 수정하면 되므로 유지보수가 용이
 

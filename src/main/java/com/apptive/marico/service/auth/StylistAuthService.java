@@ -1,21 +1,15 @@
-package com.apptive.marico.service;
+package com.apptive.marico.service.auth;
 
-import com.apptive.marico.dto.LoginDto;
 import com.apptive.marico.dto.findPwd.NewPwdRequestDto;
 import com.apptive.marico.dto.stylist.StylistRequestDto;
 import com.apptive.marico.dto.stylist.StylistResponseDto;
-import com.apptive.marico.dto.token.TokenResponseDto;
 import com.apptive.marico.entity.Role;
 import com.apptive.marico.entity.Stylist;
-import com.apptive.marico.entity.token.RefreshToken;
 import com.apptive.marico.entity.token.VerificationToken;
 import com.apptive.marico.exception.CustomException;
-import com.apptive.marico.jwt.TokenProvider;
 import com.apptive.marico.repository.*;
+import com.apptive.marico.service.VerificationTokenService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +35,8 @@ public class StylistAuthService {
 
     @Transactional
     public StylistResponseDto signup(StylistRequestDto stylistRequestDto) {
-        customUserDetailsService.checkEmailAvailability(stylistRequestDto.getEmail());
+        customUserDetailsService.checkAvailability(stylistRequestDto);
+
 
         Role userRole = roleRepository.findByName(ROLE_STYLIST)
                 .orElseThrow(() -> new CustomException(ROLE_NOT_FOUND));
@@ -56,12 +51,19 @@ public class StylistAuthService {
 
     public String changePassword(Stylist stylist, NewPwdRequestDto newPwdRequestDto){
         VerificationToken verificationToken = verificationTokenRepository.findByVerificationCode(newPwdRequestDto.getCode());
-        if (!newPwdRequestDto.getUserEmail().equals(verificationTokenService.checkTokenAndGetEmail(verificationToken))){
-            throw new CustomException(EMAIL_DOES_NOT_MATCH);
+        if (verificationToken == null) {
+            throw new CustomException(VERIFICATION_CODE_INVALID);
         }
+        if(!verificationToken.getExpiryDate().isAfter(LocalDateTime.now())) {
+            verificationTokenRepository.delete(verificationToken);
+            throw new CustomException(VERIFICATION_CODE_TIMEOUT);
+        }
+        if(stylist == null) throw new CustomException(STYLIST_NOT_FOUND);
+        verificationTokenRepository.delete(verificationToken);
         stylist.setPassword(passwordEncoder.encode(newPwdRequestDto.getPassword()));
         stylistRepository.save(stylist);
-        return "비밀 번호가 변경 되었습니다.";
+        return "비밀번호가 변경되었습니다.";
     }
+
 
 }

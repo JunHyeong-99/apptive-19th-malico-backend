@@ -1,6 +1,6 @@
 package com.apptive.marico.jwt;
 
-import com.apptive.marico.dto.token.TokenResponseDto;
+import com.apptive.marico.dto.token.TokenDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -36,7 +36,33 @@ public class TokenProvider {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public TokenResponseDto generateTokenDto(Authentication authentication) {
+    public TokenDto reissueTokenDto(Authentication authentication, String refreshToken) {
+        // 권한들 가져오기
+        String authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+        long now = (new Date()).getTime();
+
+        // Access Token 생성
+        Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
+
+        String accessToken = Jwts.builder()
+                .setSubject(authentication.getName())       // payload "sub": "name"
+                .claim(AUTHORITIES_KEY, authorities)        // payload "auth": "ROLE_USER"
+                .setExpiration(accessTokenExpiresIn)        // payload "exp": 1516239022 (예시)
+                .signWith(key, SignatureAlgorithm.HS512)    // header "alg": "HS512"
+                .compact();
+
+        return TokenDto.builder()
+                .grantType(BEARER_TYPE)
+                .accessToken(accessToken)
+                .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    public TokenDto generateTokenDto(Authentication authentication) {
         // 권한들 가져오기
         String authorities = authentication.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
@@ -58,6 +84,8 @@ public class TokenProvider {
         Date refreshTokenExpiresIn = new Date(now + REFRESH_TOKEN_EXPIRE_TIME);
 
         String refreshToken = Jwts.builder()
+                .setSubject(authentication.getName())       // payload "sub": "name"
+                .claim(AUTHORITIES_KEY, authorities)
             .setExpiration(refreshTokenExpiresIn)
             .signWith(key, SignatureAlgorithm.HS512)
             .compact();
@@ -65,11 +93,12 @@ public class TokenProvider {
         log.info("Generated Token: {}", accessToken);
         log.info("Expires at: {}", accessTokenExpiresIn);
 
-        return TokenResponseDto.builder()
+        return TokenDto.builder()
             .grantType(BEARER_TYPE)
             .accessToken(accessToken)
             .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
             .refreshToken(refreshToken)
+            .refreshTokenExpiresIn(refreshTokenExpiresIn.getTime())
             .build();
     }
 
@@ -105,10 +134,22 @@ public class TokenProvider {
             log.info("지원되지 않는 JWT 토큰입니다.");
         } catch (IllegalArgumentException e) {
             log.info("JWT 토큰이 잘못되었습니다.");
+        } catch (Exception e) {
+            System.out.println("test1");
         }
         return false;
     }
 
+    public boolean validateTokenExceptExpiration(String accessToken) {
+        try {
+            Claims claims = parseClaims(accessToken);
+            return claims.getExpiration().before(new Date());
+        } catch(ExpiredJwtException e) {
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
     private Claims parseClaims(String accessToken) {
         try {
             return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
