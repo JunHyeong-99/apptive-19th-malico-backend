@@ -8,10 +8,8 @@ import com.apptive.marico.entity.*;
 import com.apptive.marico.exception.CustomException;
 import com.apptive.marico.repository.*;
 import com.apptive.marico.service.auth.CustomUserDetailsService;
-import com.apptive.marico.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -157,7 +155,7 @@ public class StylistMypageService {
     public StyleListDto getStyle(String userId) {
         Optional<Stylist> stylist = stylistRepository.findByUserIdWithStyle(userId);
         if(stylist.isEmpty()) throw new CustomException(USER_NOT_FOUND);
-        List<Style> styleList = stylist.get().getStyle();
+        List<Style> styleList = stylist.get().getStyles();
         List<StyleDto> styleDtoList = styleList.stream().map(StyleDto::toDto).collect(Collectors.toList());
         return StyleListDto.builder().styleDtoList(styleDtoList).build();
     }
@@ -177,7 +175,7 @@ public class StylistMypageService {
         Optional<Stylist> stylist = stylistRepository.findByUserIdWithStyle(userId);
         if (stylist.isEmpty()) throw new CustomException(USER_NOT_FOUND);
 
-        List<Style> style = stylist.get().getStyle();
+        List<Style> style = stylist.get().getStyles();
         if (style.isEmpty()) throw new CustomException(STYLE_NOT_FOUND);
         Long[] styleIdList = extractStyleIds(style);
 
