@@ -44,4 +44,9 @@ public class ServiceInquiry {
     private List<String> responseImg = new ArrayList<>();
 
     private boolean answerComplete = false;
+
+    public void addAnswer(String responseContent, List<String> responseImg) {
+        this.responseContent = responseContent;
+        this.responseImg = responseImg;
+    }
 }
