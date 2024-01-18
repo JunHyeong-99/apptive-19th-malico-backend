@@ -1,7 +1,7 @@
 package com.apptive.marico.controller.auth;
 
-import com.apptive.marico.dto.member.MemberRequestDto;
-import com.apptive.marico.dto.member.MemberResponseDto;
+import com.apptive.marico.dto.mypage.member.MemberRequestDto;
+import com.apptive.marico.dto.mypage.member.MemberResponseDto;
 import com.apptive.marico.service.auth.MemberAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

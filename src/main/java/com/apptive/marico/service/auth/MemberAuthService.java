@@ -1,7 +1,7 @@
 package com.apptive.marico.service.auth;
 
-import com.apptive.marico.dto.member.MemberRequestDto;
-import com.apptive.marico.dto.member.MemberResponseDto;
+import com.apptive.marico.dto.mypage.member.MemberRequestDto;
+import com.apptive.marico.dto.mypage.member.MemberResponseDto;
 import com.apptive.marico.entity.Member;
 import com.apptive.marico.entity.Role;
 import com.apptive.marico.entity.token.VerificationToken;
@@ -16,13 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.apptive.marico.entity.Role.RoleName.ROLE_MEMBER;
 import static com.apptive.marico.exception.ErrorCode.*;
-import static com.apptive.marico.exception.ErrorCode.INVALID_NICKNAME;
 
 @Service
 @Transactional
