@@ -4,10 +4,10 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.apptive.marico.dto.member.MemberMypageDto;
-import com.apptive.marico.dto.mypage.LikedStylistDto;
-import com.apptive.marico.dto.mypage.LikedStylistListDto;
-import com.apptive.marico.dto.mypage.MemberMypageEditDto;
+import com.apptive.marico.dto.mypage.member.MemberMypageDto;
+import com.apptive.marico.dto.mypage.member.LikedStylistDto;
+import com.apptive.marico.dto.mypage.member.LikedStylistListDto;
+import com.apptive.marico.dto.mypage.member.MemberMypageEditDto;
 import com.apptive.marico.entity.Like;
 import com.apptive.marico.entity.Member;
 import com.apptive.marico.entity.Stylist;
@@ -21,16 +21,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -149,7 +146,7 @@ public class MemberMypageService {
     @Transactional
     public String changeProfileImage(String userId, MultipartFile profileImage) {
         if(profileImage.isEmpty()){
-            throw new CustomException(IMAGE_NOT_EXIST);
+            throw new CustomException(PREFERRED_STYLE_IMAGE_NOT_EXIST);
         }
 
         Member member = memberRepository.findByUserId(userId).orElseThrow(

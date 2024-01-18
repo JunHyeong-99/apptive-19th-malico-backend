@@ -1,7 +1,6 @@
 package com.apptive.marico.entity;
 
 import com.apptive.marico.dto.stylist.StylistMypageEditDto;
-import com.apptive.marico.entity.token.VerificationToken;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -55,6 +54,8 @@ public class Stylist implements UserDetails {
 
     private String profileImage;
 
+    private String stageName;
+
     private String oneLineIntroduction;
 
     private String stylistIntroduction;
@@ -65,7 +66,7 @@ public class Stylist implements UserDetails {
     private List<Career> career;
 
     @OneToMany(mappedBy = "stylist", orphanRemoval = true) // 연결이 끊어진 스타일은 자동 삭제
-    private List<Style> style = new ArrayList<>();
+    private List<Style> styles = new ArrayList<>();
 
     @OneToMany(mappedBy = "stylist", orphanRemoval = true)
     private List<NoticeReadStatus> noticeReadStatuses = new ArrayList<>();

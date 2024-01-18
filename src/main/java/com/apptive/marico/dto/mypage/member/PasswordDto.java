@@ -1,4 +1,4 @@
-package com.apptive.marico.dto.mypage;
+package com.apptive.marico.dto.mypage.member;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

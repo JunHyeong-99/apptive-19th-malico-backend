@@ -1,25 +1,21 @@
 package com.apptive.marico.controller;
 
 import com.apptive.marico.dto.findId.SendEmailRequestDto;
-import com.apptive.marico.dto.member.MemberMypageDto;
-import com.apptive.marico.dto.mypage.MemberMypageEditDto;
-import com.apptive.marico.dto.mypage.PasswordDto;
-import com.apptive.marico.dto.mypage.LikedStylistListDto;
+import com.apptive.marico.dto.mypage.member.MemberMypageDto;
+import com.apptive.marico.dto.mypage.member.MemberMypageEditDto;
+import com.apptive.marico.dto.mypage.member.PasswordDto;
+import com.apptive.marico.dto.mypage.member.LikedStylistListDto;
 import com.apptive.marico.dto.verificationToken.SendEmailResponseDto;
-import com.apptive.marico.exception.CustomException;
 import com.apptive.marico.service.MemberMypageService;
 import com.apptive.marico.service.VerificationTokenService;
 import com.apptive.marico.utils.ApiUtils;
 import com.apptive.marico.utils.ApiUtils.ApiSuccess;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.io.File;
 import java.security.Principal;
 
 @RestController
