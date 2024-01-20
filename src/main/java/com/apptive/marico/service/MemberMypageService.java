@@ -126,9 +126,9 @@ public class MemberMypageService {
         Member member = memberRepository.findByUserId(userId).orElseThrow(
                 () -> new CustomException(USER_NOT_FOUND));
 
-
         member.setEmail(newEmail);
-        memberRepository.save(member);
+        Member save = memberRepository.save(member);
+        System.out.println(save.getEmail());
 
         return "이메일이 정상적으로 변경되었습니다.";
     }

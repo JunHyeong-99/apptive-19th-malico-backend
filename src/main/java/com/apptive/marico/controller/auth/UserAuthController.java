@@ -53,6 +53,7 @@ public class UserAuthController {
 
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshToken(HttpServletRequest request,  HttpServletResponse response, @CookieValue String refreshToken) {
+        System.out.println(refreshToken);
         String accessToken = request.getHeader("authorization").substring(7);
         TokenDto tokenDto = customUserDetailsService.refreshToken(accessToken, refreshToken);
         response.setHeader("Set-Cookie",
