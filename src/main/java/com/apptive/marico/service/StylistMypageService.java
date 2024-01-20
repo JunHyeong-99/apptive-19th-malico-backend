@@ -1,4 +1,5 @@
 package com.apptive.marico.service;
+import com.apptive.marico.dto.AccountDto;
 import com.apptive.marico.dto.CareerDto;
 import com.apptive.marico.dto.stylist.*;
 import com.apptive.marico.dto.stylist.service.ServiceCategoryDto;
@@ -244,5 +245,23 @@ public class StylistMypageService {
         stylistRepository.delete(stylist);
 
         return "회원 탈퇴가 정상적으로 완료되었습니다.";
+    }
+
+    public AccountDto loadAccount(String userId) {
+        Stylist stylist = stylistRepository.findByUserId(userId).orElseThrow(
+                () -> new CustomException(USER_NOT_FOUND));
+        return AccountDto.builder()
+                .bank(stylist.getBank())
+                .accountHolder(stylist.getAccountHolder())
+                .accountNumber(stylist.getAccountNumber())
+                .build();
+    }
+
+    public String addAccount(String userId, AccountDto accountDto) {
+        Stylist stylist = stylistRepository.findByUserId(userId).orElseThrow(
+                () -> new CustomException(USER_NOT_FOUND));
+        stylist.setAccount(accountDto);
+        stylistRepository.save(stylist);
+        return "계좌정보가 정상적으로 등록되었습니다.";
     }
 }

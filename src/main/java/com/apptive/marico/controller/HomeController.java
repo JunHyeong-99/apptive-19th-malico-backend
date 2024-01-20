@@ -22,4 +22,10 @@ public class HomeController {
     public ResponseEntity<?> stylistDetail(@PathVariable Long stylist_id) {
         return ResponseEntity.ok(homeService.stylistDetail(stylist_id));
     }
+
+    @PostMapping("/member/service/{service_id}")
+    public ResponseEntity<?> requestService(@PathVariable Long service_id) {
+        return ResponseEntity.ok(homeService.stylistDetail(stylist_id));
+    }
+
 }

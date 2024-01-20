@@ -1,5 +1,6 @@
 package com.apptive.marico.entity;
 
+import com.apptive.marico.dto.AccountDto;
 import com.apptive.marico.dto.stylist.StylistMypageEditDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -62,6 +63,12 @@ public class Stylist implements UserDetails {
 
     private String chat_link;
 
+    private String bank;
+
+    private String accountNumber;
+
+    private String accountHolder;
+
     @OneToMany(mappedBy = "stylist" , cascade = CascadeType.ALL, orphanRemoval = true) // 연결이 끊어진 career는 자동 삭제
     private List<Career> career;
 
@@ -96,6 +103,12 @@ public class Stylist implements UserDetails {
 
     public void changeEmail(String email) {
         this.email = email;
+    }
+
+    public void setAccount(AccountDto accountDto) {
+        this.bank = accountDto.getBank();
+        this.accountNumber = accountDto.getAccountNumber();
+        this.accountHolder = accountDto.getAccountHolder();
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

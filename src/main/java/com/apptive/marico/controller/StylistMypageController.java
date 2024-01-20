@@ -1,5 +1,6 @@
 package com.apptive.marico.controller;
 
+import com.apptive.marico.dto.AccountDto;
 import com.apptive.marico.dto.findId.SendEmailRequestDto;
 import com.apptive.marico.dto.mypage.member.PasswordDto;
 import com.apptive.marico.dto.stylist.DeleteStyleDto;
@@ -109,4 +110,14 @@ public class StylistMypageController {
     public ResponseEntity<?> deleteStylist(Principal principal) {
         return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(stylistMypageService.deleteStylist(principal.getName())));
     }
+
+    @GetMapping("/account")
+    public ResponseEntity<?> loadAccount(Principal principal) {
+        return ResponseEntity.ok(ApiUtils.success(stylistMypageService.loadAccount(principal.getName())));
+    }
+    @PostMapping("/account")
+    public ResponseEntity<?> addAccount(Principal principal, @RequestBody AccountDto accountDto) {
+        return ResponseEntity.ok(ApiUtils.success(stylistMypageService.addAccount(principal.getName(), accountDto)));
+    }
+
 }
