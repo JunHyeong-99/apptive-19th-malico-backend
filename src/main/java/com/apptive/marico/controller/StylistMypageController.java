@@ -69,8 +69,8 @@ public class StylistMypageController {
     }
 
     @PostMapping("/style")
-    public ResponseEntity<?> addMyStyle(Principal principal, @RequestBody StyleDto styleDto) {
-        return ResponseEntity.ok(ApiUtils.success(stylistMypageService.addStyle(principal.getName(), styleDto)));
+    public ResponseEntity<?> addMyStyle(Principal principal,@RequestPart MultipartFile image ,@RequestPart StyleDto styleDto) {
+        return ResponseEntity.ok(ApiUtils.success(stylistMypageService.addStyle(principal.getName(), image,styleDto)));
     }
 
     @DeleteMapping("/style")

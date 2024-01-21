@@ -165,11 +165,12 @@ public class StylistMypageService {
         return StyleDto.DtoList.builder().styleDtoList(styleDtoList).build();
     }
 
-    public String addStyle(String userId, StyleDto styleDto) {
+    public String addStyle(String userId,MultipartFile image ,StyleDto styleDto) {
         Optional<Stylist> stylist = stylistRepository.findByUserId(userId);
         if (stylist.isEmpty()) throw new CustomException(USER_NOT_FOUND);
+        String imgPath = imageUploadService.upload(image);
         styleRepository.save(Style.builder()
-                .image(styleDto.getImage())
+                .image(imgPath)
                 .category(styleDto.getCategory())
                 .stylist(stylist.get())
                 .build());
