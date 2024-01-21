@@ -62,6 +62,12 @@ public class Member implements UserDetails {
 
     private String weight; // 필수
 
+    private String bank;
+
+    private String accountNumber;
+
+    private String accountHolder;
+
     @ManyToMany
     @JoinTable(
             name = "member_style",
