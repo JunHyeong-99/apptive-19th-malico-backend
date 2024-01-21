@@ -192,7 +192,6 @@ public class MemberMypageService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 형식의 파일(" + fileName + ") 입니다.");
         }
     }
-
     public AccountDto loadAccount(String userId) {
         Member member = memberRepository.findByUserId(userId).orElseThrow(
                 () -> new CustomException(USER_NOT_FOUND));
@@ -203,6 +202,7 @@ public class MemberMypageService {
                 .build();
     }
 
+    @Transactional
     public String addAccount(String userId, AccountDto accountDto) {
         Member member = memberRepository.findByUserId(userId).orElseThrow(
                 () -> new CustomException(USER_NOT_FOUND));

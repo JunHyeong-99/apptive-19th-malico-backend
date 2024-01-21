@@ -6,12 +6,14 @@ import com.apptive.marico.entity.Career;
 import com.apptive.marico.entity.Stylist;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Builder
 @Getter
+@Setter
 public class StylistMypageEditDto {
     private String profile_image;
     private String nickname;

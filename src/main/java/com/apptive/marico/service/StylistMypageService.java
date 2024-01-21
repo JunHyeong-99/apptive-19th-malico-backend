@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
@@ -33,6 +34,7 @@ public class StylistMypageService {
     private final StyleRepository styleRepository;
     private final PasswordEncoder passwordEncoder;
     private final CustomUserDetailsService customUserDetailsService;
+    private final ImageUploadService imageUploadService;
     public StylistMypageDto mypage(String userId) {
         Stylist stylist = stylistRepository.findByUserId(userId).orElseThrow(
                 () -> new CustomException(USER_NOT_FOUND));
@@ -46,7 +48,7 @@ public class StylistMypageService {
         return StylistMypageEditDto.toDto(stylist);
     }
 
-    public String editInformation(String userId, StylistMypageEditDto stylistMypageEditDto) {
+    public String editInformation(String userId, MultipartFile profileImage, StylistMypageEditDto stylistMypageEditDto) {
         Stylist stylist = stylistRepository.findByUserId(userId).orElseThrow(
                 () -> new CustomException(USER_NOT_FOUND));
 
@@ -57,6 +59,8 @@ public class StylistMypageService {
         careerDtoList.stream()
                 .map(careerDto -> createCareer(careerDto, stylist))
                 .forEach(careerRepository::save);
+        String image = imageUploadService.upload(profileImage);
+        stylistMypageEditDto.setProfile_image(image);
         stylist.editStylist(stylistMypageEditDto);
         return "정상적으로 입력되었습니다.";
     }

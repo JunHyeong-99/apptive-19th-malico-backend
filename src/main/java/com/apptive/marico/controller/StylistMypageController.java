@@ -15,8 +15,10 @@ import com.apptive.marico.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/mypage/stylist")
@@ -37,8 +39,8 @@ public class StylistMypageController {
     }
 
     @PostMapping("/information")
-    public ResponseEntity<?> editInf(Principal principal, @RequestBody StylistMypageEditDto stylistMypageEditDto) {
-        return ResponseEntity.ok(ApiUtils.success(stylistMypageService.editInformation(principal.getName(), stylistMypageEditDto)));
+    public ResponseEntity<?> editInf(Principal principal, @RequestPart MultipartFile profileImage, @RequestPart StylistMypageEditDto stylistMypageEditDto) {
+        return ResponseEntity.ok(ApiUtils.success(stylistMypageService.editInformation(principal.getName(), profileImage ,stylistMypageEditDto)));
     }
 
     @GetMapping("/stylist-service")
