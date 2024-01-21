@@ -32,16 +32,17 @@ public class InquiryService {
     private final StylistServiceRepository stylistServiceRepository;
     private final StylistRepository stylistRepository;
     private final ImageUploadService imageUploadService;
-    public String addInquiry(String userId, InquiryDto inquiryDto) {
+    public String addInquiry(String userId, List<MultipartFile> image, InquiryDto inquiryDto) {
         Member member = memberRepository.findByUserId(userId)
                             .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
         StylistService stylistService = stylistServiceRepository.findById(inquiryDto.getService_id())
                                             .orElseThrow(() -> new CustomException(SERVICE_NOT_FOUND));
+        List<String> img = imageUploadService.upload(image);
         inquiryRepository.save(ServiceInquiry.builder()
                                 .title(inquiryDto.getTitle())
                                 .content(inquiryDto.getContent())
                                 .member(member)
-                                .inquiryImg(inquiryDto.getImg())
+                                .inquiryImg(img)
                                 .stylistService(stylistService)
                                 .build());
         return "문의사항이 등록 되었습니다.";

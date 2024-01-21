@@ -20,8 +20,8 @@ public class ServiceInquiryController {
 
     private final InquiryService inquiryService;
     @PostMapping
-    public ResponseEntity<?> addInquiry(Principal principal, @RequestBody InquiryDto inquiryDto) {
-        return ResponseEntity.ok(ApiUtils.success(inquiryService.addInquiry(principal.getName(), inquiryDto)));
+    public ResponseEntity<?> addInquiry(Principal principal,@RequestPart List<MultipartFile> image, @RequestPart InquiryDto inquiryDto) {
+        return ResponseEntity.ok(ApiUtils.success(inquiryService.addInquiry(principal.getName(), image ,inquiryDto)));
     }
 
     @GetMapping
