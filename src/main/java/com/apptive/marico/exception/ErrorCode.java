@@ -19,6 +19,7 @@ public enum ErrorCode {
 
     VERIFICATION_CODE_INVALID(401, "발급 코드가 유효하지 않습니다."),
     EMAIL_DOES_NOT_MATCH(401, "이메일이 일치하지 않습니다."),
+    AUTHORIZATION_NOT_FOUND(401, "인증 헤더가 누락되었습니다. 요청에 'AUTHORIZATION' 헤더를 포함해주세요."),
 
     //403 Forbidden 요청이 이해되었지만 서버가 요청을 거부했음
     TOO_MANY_SERVICES(403, "등록할 수 있는 서비스 갯수를 초과했습니다."),
