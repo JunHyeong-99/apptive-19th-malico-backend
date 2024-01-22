@@ -1,4 +1,5 @@
 package com.apptive.marico.service;
+import com.apptive.marico.dto.AccountDto;
 import com.apptive.marico.dto.CareerDto;
 import com.apptive.marico.dto.stylist.*;
 import com.apptive.marico.dto.stylist.service.ServiceCategoryDto;
@@ -8,13 +9,12 @@ import com.apptive.marico.entity.*;
 import com.apptive.marico.exception.CustomException;
 import com.apptive.marico.repository.*;
 import com.apptive.marico.service.auth.CustomUserDetailsService;
-import com.apptive.marico.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
@@ -34,6 +34,7 @@ public class StylistMypageService {
     private final StyleRepository styleRepository;
     private final PasswordEncoder passwordEncoder;
     private final CustomUserDetailsService customUserDetailsService;
+    private final ImageUploadService imageUploadService;
     public StylistMypageDto mypage(String userId) {
         Stylist stylist = stylistRepository.findByUserId(userId).orElseThrow(
                 () -> new CustomException(USER_NOT_FOUND));
@@ -47,7 +48,7 @@ public class StylistMypageService {
         return StylistMypageEditDto.toDto(stylist);
     }
 
-    public String editInformation(String userId, StylistMypageEditDto stylistMypageEditDto) {
+    public String editInformation(String userId, MultipartFile profileImage, StylistMypageEditDto stylistMypageEditDto) {
         Stylist stylist = stylistRepository.findByUserId(userId).orElseThrow(
                 () -> new CustomException(USER_NOT_FOUND));
 
@@ -58,6 +59,8 @@ public class StylistMypageService {
         careerDtoList.stream()
                 .map(careerDto -> createCareer(careerDto, stylist))
                 .forEach(careerRepository::save);
+        String image = imageUploadService.upload(profileImage);
+        stylistMypageEditDto.setProfile_image(image);
         stylist.editStylist(stylistMypageEditDto);
         return "정상적으로 입력되었습니다.";
     }
@@ -157,16 +160,17 @@ public class StylistMypageService {
     public StyleDto.DtoList getStyle(String userId) {
         Optional<Stylist> stylist = stylistRepository.findByUserIdWithStyle(userId);
         if(stylist.isEmpty()) throw new CustomException(USER_NOT_FOUND);
-        List<Style> styleList = stylist.get().getStyle();
+        List<Style> styleList = stylist.get().getStyles();
         List<StyleDto> styleDtoList = styleList.stream().map(StyleDto::toDto).collect(Collectors.toList());
         return StyleDto.DtoList.builder().styleDtoList(styleDtoList).build();
     }
 
-    public String addStyle(String userId, StyleDto styleDto) {
+    public String addStyle(String userId,MultipartFile image ,StyleDto styleDto) {
         Optional<Stylist> stylist = stylistRepository.findByUserId(userId);
         if (stylist.isEmpty()) throw new CustomException(USER_NOT_FOUND);
+        String imgPath = imageUploadService.upload(image);
         styleRepository.save(Style.builder()
-                .image(styleDto.getImage())
+                .image(imgPath)
                 .category(styleDto.getCategory())
                 .stylist(stylist.get())
                 .build());
@@ -177,7 +181,7 @@ public class StylistMypageService {
         Optional<Stylist> stylist = stylistRepository.findByUserIdWithStyle(userId);
         if (stylist.isEmpty()) throw new CustomException(USER_NOT_FOUND);
 
-        List<Style> style = stylist.get().getStyle();
+        List<Style> style = stylist.get().getStyles();
         if (style.isEmpty()) throw new CustomException(STYLE_NOT_FOUND);
         Long[] styleIdList = extractStyleIds(style);
 
@@ -246,5 +250,23 @@ public class StylistMypageService {
         stylistRepository.delete(stylist);
 
         return "회원 탈퇴가 정상적으로 완료되었습니다.";
+    }
+
+    public AccountDto loadAccount(String userId) {
+        Stylist stylist = stylistRepository.findByUserId(userId).orElseThrow(
+                () -> new CustomException(USER_NOT_FOUND));
+        return AccountDto.builder()
+                .bank(stylist.getBank())
+                .accountHolder(stylist.getAccountHolder())
+                .accountNumber(stylist.getAccountNumber())
+                .build();
+    }
+
+    public String addAccount(String userId, AccountDto accountDto) {
+        Stylist stylist = stylistRepository.findByUserId(userId).orElseThrow(
+                () -> new CustomException(USER_NOT_FOUND));
+        stylist.setAccount(accountDto);
+        stylistRepository.save(stylist);
+        return "계좌정보가 정상적으로 등록되었습니다.";
     }
 }

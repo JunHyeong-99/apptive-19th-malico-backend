@@ -1,7 +1,8 @@
 package com.apptive.marico.controller;
 
+import com.apptive.marico.dto.AccountDto;
 import com.apptive.marico.dto.findId.SendEmailRequestDto;
-import com.apptive.marico.dto.mypage.PasswordDto;
+import com.apptive.marico.dto.mypage.member.PasswordDto;
 import com.apptive.marico.dto.stylist.DeleteStyleDto;
 import com.apptive.marico.dto.stylist.StyleDto;
 import com.apptive.marico.dto.stylist.StylistMypageDto;
@@ -14,8 +15,10 @@ import com.apptive.marico.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/mypage/stylist")
@@ -36,8 +39,8 @@ public class StylistMypageController {
     }
 
     @PostMapping("/information")
-    public ResponseEntity<?> editInf(Principal principal, @RequestBody StylistMypageEditDto stylistMypageEditDto) {
-        return ResponseEntity.ok(ApiUtils.success(stylistMypageService.editInformation(principal.getName(), stylistMypageEditDto)));
+    public ResponseEntity<?> editInf(Principal principal, @RequestPart MultipartFile profileImage, @RequestPart StylistMypageEditDto stylistMypageEditDto) {
+        return ResponseEntity.ok(ApiUtils.success(stylistMypageService.editInformation(principal.getName(), profileImage ,stylistMypageEditDto)));
     }
 
     @GetMapping("/stylist-service")
@@ -66,8 +69,8 @@ public class StylistMypageController {
     }
 
     @PostMapping("/style")
-    public ResponseEntity<?> addMyStyle(Principal principal, @RequestBody StyleDto styleDto) {
-        return ResponseEntity.ok(ApiUtils.success(stylistMypageService.addStyle(principal.getName(), styleDto)));
+    public ResponseEntity<?> addMyStyle(Principal principal,@RequestPart MultipartFile image ,@RequestPart StyleDto styleDto) {
+        return ResponseEntity.ok(ApiUtils.success(stylistMypageService.addStyle(principal.getName(), image,styleDto)));
     }
 
     @DeleteMapping("/style")
@@ -109,4 +112,14 @@ public class StylistMypageController {
     public ResponseEntity<?> deleteStylist(Principal principal) {
         return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(stylistMypageService.deleteStylist(principal.getName())));
     }
+
+    @GetMapping("/account")
+    public ResponseEntity<?> loadAccount(Principal principal) {
+        return ResponseEntity.ok(ApiUtils.success(stylistMypageService.loadAccount(principal.getName())));
+    }
+    @PostMapping("/account")
+    public ResponseEntity<?> addAccount(Principal principal, @RequestBody AccountDto accountDto) {
+        return ResponseEntity.ok(ApiUtils.success(stylistMypageService.addAccount(principal.getName(), accountDto)));
+    }
+
 }

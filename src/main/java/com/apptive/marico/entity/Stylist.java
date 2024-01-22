@@ -1,7 +1,7 @@
 package com.apptive.marico.entity;
 
+import com.apptive.marico.dto.AccountDto;
 import com.apptive.marico.dto.stylist.StylistMypageEditDto;
-import com.apptive.marico.entity.token.VerificationToken;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -55,20 +55,31 @@ public class Stylist implements UserDetails {
 
     private String profileImage;
 
+    private String stageName;
+
     private String oneLineIntroduction;
 
     private String stylistIntroduction;
 
     private String chat_link;
 
+    private String bank;
+
+    private String accountNumber;
+
+    private String accountHolder;
+
     @OneToMany(mappedBy = "stylist" , cascade = CascadeType.ALL, orphanRemoval = true) // 연결이 끊어진 career는 자동 삭제
     private List<Career> career;
 
     @OneToMany(mappedBy = "stylist", orphanRemoval = true) // 연결이 끊어진 스타일은 자동 삭제
-    private List<Style> style = new ArrayList<>();
+    private List<Style> styles = new ArrayList<>();
 
     @OneToMany(mappedBy = "stylist", orphanRemoval = true)
     private List<NoticeReadStatus> noticeReadStatuses = new ArrayList<>();
+
+    @OneToMany(mappedBy = "stylist", orphanRemoval = true)
+    private List<StylistService> stylistServices = new ArrayList<>();
 
     @Column(nullable = false)
     private boolean enabled;
@@ -92,6 +103,12 @@ public class Stylist implements UserDetails {
 
     public void changeEmail(String email) {
         this.email = email;
+    }
+
+    public void setAccount(AccountDto accountDto) {
+        this.bank = accountDto.getBank();
+        this.accountNumber = accountDto.getAccountNumber();
+        this.accountHolder = accountDto.getAccountHolder();
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

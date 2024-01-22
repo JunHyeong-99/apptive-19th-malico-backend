@@ -1,4 +1,4 @@
-package com.apptive.marico.dto.member;
+package com.apptive.marico.dto.mypage.member;
 
 import com.apptive.marico.entity.Member;
 import lombok.*;

@@ -1,5 +1,6 @@
 package com.apptive.marico.entity;
 
+import com.apptive.marico.dto.AccountDto;
 import com.apptive.marico.entity.token.VerificationToken;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -47,12 +48,53 @@ public class Member implements UserDetails {
 
     private LocalDate birthDate;
 
-    private String residence;
+    // 도시
+    private String city; // 필수
+
+    // 구
+    private String state; // 필수
 
     private String profileImage;
 
     @OneToMany(mappedBy = "member", orphanRemoval = true)
     private List<NoticeReadStatus> noticeReadStatuses = new ArrayList<>();
+
+    private String height; // 필수
+
+    private String weight; // 필수
+
+    private String bank;
+
+    private String accountNumber;
+
+    private String accountHolder;
+
+    @ManyToMany
+    @JoinTable(
+            name = "member_style",
+            joinColumns = @JoinColumn(name = "member_id"),
+            inverseJoinColumns = @JoinColumn(name = "style_id"))
+    private List<Style> preferredStyles = new ArrayList<>(); // 필수
+
+    // 체형 사진
+    private String bodyShapeImages; // 필수
+
+    // 나의 스타일
+    @OneToMany(mappedBy = "member" , cascade = CascadeType.ALL)
+    private List<MyStyle> myStyles = new ArrayList<>();
+
+    // 참고 사진
+    @OneToMany(mappedBy = "member" , cascade = CascadeType.ALL)
+    private List<ReferenceImage> referenceImages = new ArrayList<>();
+
+    // 참고 사항
+    private String note; // 필수
+
+    public void setAccount(AccountDto accountDto) {
+        this.bank = accountDto.getBank();
+        this.accountNumber = accountDto.getAccountNumber();
+        this.accountHolder = accountDto.getAccountHolder();
+    }
 
 
     @Column(nullable = false)

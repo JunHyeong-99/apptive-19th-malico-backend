@@ -1,7 +1,7 @@
 package com.apptive.marico.service.auth;
 
-import com.apptive.marico.dto.member.MemberRequestDto;
-import com.apptive.marico.dto.member.MemberResponseDto;
+import com.apptive.marico.dto.mypage.member.MemberRequestDto;
+import com.apptive.marico.dto.mypage.member.MemberResponseDto;
 import com.apptive.marico.entity.Member;
 import com.apptive.marico.entity.Role;
 import com.apptive.marico.entity.token.VerificationToken;
