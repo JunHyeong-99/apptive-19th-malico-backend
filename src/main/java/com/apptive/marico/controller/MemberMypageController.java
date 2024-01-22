@@ -1,5 +1,6 @@
 package com.apptive.marico.controller;
 
+import com.apptive.marico.dto.AccountDto;
 import com.apptive.marico.dto.findId.SendEmailRequestDto;
 import com.apptive.marico.dto.mypage.member.MemberMypageDto;
 import com.apptive.marico.dto.mypage.member.MemberMypageEditDto;
@@ -106,5 +107,13 @@ public class MemberMypageController {
         return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(memberMyPageService.deleteMember(principal.getName())));
     }
 
+    @GetMapping("/account")
+    public ResponseEntity<?> loadAccount(Principal principal) {
+        return ResponseEntity.ok(ApiUtils.success(memberMyPageService.loadAccount(principal.getName())));
+    }
+    @PostMapping("/account")
+    public ResponseEntity<?> addAccount(Principal principal, @RequestBody AccountDto accountDto) {
+        return ResponseEntity.ok(ApiUtils.success(memberMyPageService.addAccount(principal.getName(), accountDto)));
+    }
 
 }
