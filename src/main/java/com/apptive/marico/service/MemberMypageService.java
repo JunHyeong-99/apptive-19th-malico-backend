@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.apptive.marico.dto.AccountDto;
 import com.apptive.marico.dto.mypage.member.MemberMypageDto;
 import com.apptive.marico.dto.mypage.member.LikedStylistDto;
 import com.apptive.marico.dto.mypage.member.LikedStylistListDto;
@@ -126,9 +127,9 @@ public class MemberMypageService {
         Member member = memberRepository.findByUserId(userId).orElseThrow(
                 () -> new CustomException(USER_NOT_FOUND));
 
-
         member.setEmail(newEmail);
-        memberRepository.save(member);
+        Member save = memberRepository.save(member);
+        System.out.println(save.getEmail());
 
         return "이메일이 정상적으로 변경되었습니다.";
     }
@@ -190,5 +191,23 @@ public class MemberMypageService {
         } catch (StringIndexOutOfBoundsException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 형식의 파일(" + fileName + ") 입니다.");
         }
+    }
+    public AccountDto loadAccount(String userId) {
+        Member member = memberRepository.findByUserId(userId).orElseThrow(
+                () -> new CustomException(USER_NOT_FOUND));
+        return AccountDto.builder()
+                .bank(member.getBank())
+                .accountHolder(member.getAccountHolder())
+                .accountNumber(member.getAccountNumber())
+                .build();
+    }
+
+    @Transactional
+    public String addAccount(String userId, AccountDto accountDto) {
+        Member member = memberRepository.findByUserId(userId).orElseThrow(
+                () -> new CustomException(USER_NOT_FOUND));
+        member.setAccount(accountDto);
+        memberRepository.save(member);
+        return "계좌정보가 정상적으로 등록되었습니다.";
     }
 }

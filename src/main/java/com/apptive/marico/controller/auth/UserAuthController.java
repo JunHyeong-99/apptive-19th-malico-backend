@@ -53,6 +53,7 @@ public class UserAuthController {
 
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshToken(HttpServletRequest request,  HttpServletResponse response, @CookieValue String refreshToken) {
+        System.out.println(refreshToken);
         String accessToken = request.getHeader("authorization").substring(7);
         TokenDto tokenDto = customUserDetailsService.refreshToken(accessToken, refreshToken);
         response.setHeader("Set-Cookie",
@@ -66,7 +67,7 @@ public class UserAuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@RequestBody TokenRequestDto requestDto) {
-        customUserDetailsService.logout(requestDto);
+        customUserDetailsService.logout(requestDto.getAccessToken());
         return ResponseEntity.ok().build();
     }
 

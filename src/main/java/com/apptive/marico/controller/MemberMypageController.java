@@ -1,11 +1,13 @@
 package com.apptive.marico.controller;
 
+import com.apptive.marico.dto.AccountDto;
 import com.apptive.marico.dto.findId.SendEmailRequestDto;
 import com.apptive.marico.dto.mypage.member.MemberMypageDto;
 import com.apptive.marico.dto.mypage.member.MemberMypageEditDto;
 import com.apptive.marico.dto.mypage.member.PasswordDto;
 import com.apptive.marico.dto.mypage.member.LikedStylistListDto;
 import com.apptive.marico.dto.verificationToken.SendEmailResponseDto;
+import com.apptive.marico.exception.CustomException;
 import com.apptive.marico.service.MemberMypageService;
 import com.apptive.marico.service.VerificationTokenService;
 import com.apptive.marico.utils.ApiUtils;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+
+import static com.apptive.marico.exception.ErrorCode.AUTHORIZATION_NOT_FOUND;
 
 @RestController
 @RequestMapping("/api/mypage/member")
@@ -76,16 +80,20 @@ public class MemberMypageController {
 
     @PostMapping("/email/verification-code")
     public ResponseEntity<SendEmailResponseDto> createVerificationCode(@RequestBody SendEmailRequestDto sendEmailRequestDto) {
-        return ResponseEntity.ok(new SendEmailResponseDto(verificationTokenService.createVerificationTokenForSign(sendEmailRequestDto.getEmail())));
+        return ResponseEntity.ok(new SendEmailResponseDto(verificationTokenService.createVerificationTokenForChangeEmail(sendEmailRequestDto.getEmail())));
     }
 
     @GetMapping("/email/verification-code")
     public ResponseEntity<?> checkVerificationCode(Principal principal, @RequestParam String code) {
+        System.out.println(code);
         return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(verificationTokenService.verifyUserEmailForSign(code)));
     }
 
-    @PostMapping("/email")
+    @PatchMapping("/email")
     public ResponseEntity<?> changeEmail(Principal principal, @RequestBody SendEmailRequestDto sendEmailRequestDto) {
+        if (principal == null) {
+            throw new CustomException(AUTHORIZATION_NOT_FOUND);
+        }
         return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(memberMyPageService.changeEmail(principal.getName(), sendEmailRequestDto.getEmail())));
     }
 
@@ -99,5 +107,13 @@ public class MemberMypageController {
         return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(memberMyPageService.deleteMember(principal.getName())));
     }
 
+    @GetMapping("/account")
+    public ResponseEntity<?> loadAccount(Principal principal) {
+        return ResponseEntity.ok(ApiUtils.success(memberMyPageService.loadAccount(principal.getName())));
+    }
+    @PostMapping("/account")
+    public ResponseEntity<?> addAccount(Principal principal, @RequestBody AccountDto accountDto) {
+        return ResponseEntity.ok(ApiUtils.success(memberMyPageService.addAccount(principal.getName(), accountDto)));
+    }
 
 }

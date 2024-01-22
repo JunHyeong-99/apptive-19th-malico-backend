@@ -23,6 +23,8 @@ public interface StylistRepository extends JpaRepository<Stylist,Long> {
     @Query("SELECT s FROM Stylist s LEFT JOIN FETCH s.noticeReadStatuses WHERE s.userId = :userId")
     Optional<Stylist> findByUserIdWithNoticeReadStatus(String userId);
 
+    @Query("SELECT DISTINCT s FROM Stylist s LEFT JOIN FETCH s.stylistServices WHERE s.id = :stylistId")
+    Optional<Stylist> findByIdWithService(Long stylistId);
 
     // styles 값이 파라미터로 주어진 컬렉션에 포함되어 있는 스타일리스트 엔티티들을 조회한다.
     List<Stylist> findByStylesIn(List<Style> styles);

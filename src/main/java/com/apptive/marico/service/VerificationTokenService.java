@@ -10,6 +10,7 @@ import com.apptive.marico.repository.StylistRepository;
 import com.apptive.marico.repository.VerificationTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -34,6 +35,7 @@ public class VerificationTokenService {
     }
 
 
+    @Transactional
     public String createVerificationTokenForSign(String email) {
         if (isEmailRegistered(email)) {
             throw new CustomException(ALREADY_SAVED_EMAIL);
@@ -45,8 +47,9 @@ public class VerificationTokenService {
         return "인증 번호가 전송 되었습니다.";
     }
 
+    @Transactional
     public String createVerificationTokenForChangeEmail(String email) {
-        if(!memberRepository.existsByEmail(email))
+        if(memberRepository.existsByEmail(email))
             throw new CustomException(ALREADY_SAVED_EMAIL);
 
         VerificationToken token = VerificationToken.create(email);
