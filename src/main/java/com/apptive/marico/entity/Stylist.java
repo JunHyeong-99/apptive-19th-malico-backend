@@ -93,7 +93,7 @@ public class Stylist implements UserDetails {
 
     public void editStylist(StylistMypageEditDto stylistMypageEditDto) {
         this.setProfileImage(stylistMypageEditDto.getProfile_image());
-        this.setNickname(stylistMypageEditDto.getNickname());
+        this.setStageName(stylistMypageEditDto.getStageName());
         this.setOneLineIntroduction(stylistMypageEditDto.getOneLineIntroduction());
         this.setStylistIntroduction(stylistMypageEditDto.getStylistIntroduction());
         this.setCity(stylistMypageEditDto.getCity());

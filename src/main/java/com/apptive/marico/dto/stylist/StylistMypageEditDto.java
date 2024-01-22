@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Setter
 public class StylistMypageEditDto {
     private String profile_image;
-    private String nickname;
+    private String stageName;
     private String oneLineIntroduction;
     private String stylistIntroduction;
     private String city;
@@ -27,7 +27,7 @@ public class StylistMypageEditDto {
     public static StylistMypageEditDto toDto(Stylist stylist) {
         return StylistMypageEditDto.builder()
                 .profile_image(stylist.getProfileImage())
-                .nickname(stylist.getNickname())
+                .stageName(stylist.getStageName())
                 .oneLineIntroduction(stylist.getOneLineIntroduction())
                 .stylistIntroduction(stylist.getStylistIntroduction())
                 .city(stylist.getCity())
