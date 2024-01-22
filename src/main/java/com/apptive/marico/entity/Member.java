@@ -1,5 +1,6 @@
 package com.apptive.marico.entity;
 
+import com.apptive.marico.dto.AccountDto;
 import com.apptive.marico.entity.token.VerificationToken;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -62,6 +63,12 @@ public class Member implements UserDetails {
 
     private String weight; // 필수
 
+    private String bank;
+
+    private String accountNumber;
+
+    private String accountHolder;
+
     @ManyToMany
     @JoinTable(
             name = "member_style",
@@ -83,7 +90,11 @@ public class Member implements UserDetails {
     // 참고 사항
     private String note; // 필수
 
-
+    public void setAccount(AccountDto accountDto) {
+        this.bank = accountDto.getBank();
+        this.accountNumber = accountDto.getAccountNumber();
+        this.accountHolder = accountDto.getAccountHolder();
+    }
 
 
     @Column(nullable = false)

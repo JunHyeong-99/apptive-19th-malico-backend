@@ -67,7 +67,7 @@ public class UserAuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@RequestBody TokenRequestDto requestDto) {
-        customUserDetailsService.logout(requestDto);
+        customUserDetailsService.logout(requestDto.getAccessToken());
         return ResponseEntity.ok().build();
     }
 
