@@ -38,6 +38,9 @@ public class StylistStylingService {
                 }
             }
         }
+        if (myClientDtos.size() == 0) {
+            throw new CustomException(NO_MY_CLIENT);
+        }
         return MyClientDto.toDto(myClientDtos);
     }
 
