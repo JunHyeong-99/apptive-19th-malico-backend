@@ -131,6 +131,7 @@ public class MemberMypageService {
         if(memberRepository.existsByEmail(newEmail))
             throw new CustomException(ALREADY_SAVED_EMAIL);
 
+
         member.setEmail(newEmail);
         Member save = memberRepository.save(member);
         System.out.println(save.getEmail());
