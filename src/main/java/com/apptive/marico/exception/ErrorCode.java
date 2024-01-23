@@ -27,6 +27,9 @@ public enum ErrorCode {
     //404 NOT_FOUND 잘못된 리소스 접근
     EMAIL_NOT_FOUND(404, "존재하지 않는 이메일입니다."),
     USER_NOT_FOUND(404, "존재하지 않는 회원입니다."),
+    SERVICE_APPLICATION_NOT_FOUND(404, "존재하지 않는 서비스 신청 내역입니다."),
+    SERVICE_APPLICATION_NOT_WAITING(404, "대기 중인 서비스 신청 내역이 아닙니다."),
+    NO_PERSONAL_STYLIST(404, "담당 스타일리스트가 없습니다."),
     STYLIST_NOT_FOUND(404, "존재하지 않는 스타일리스트입니다."),
     MEMBER_NOT_FOUND(404, "존재하지 않는 회원입니다."),
     STYLIST_NOT_MATCH_SERVICE(404, "자신이 등록한 서비스가 아닙니다."),

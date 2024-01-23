@@ -31,6 +31,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.apptive.marico.exception.ErrorCode.*;
@@ -126,6 +127,10 @@ public class MemberMypageService {
     public String changeEmail(String userId, String newEmail) {
         Member member = memberRepository.findByUserId(userId).orElseThrow(
                 () -> new CustomException(USER_NOT_FOUND));
+
+        if(memberRepository.existsByEmail(newEmail))
+            throw new CustomException(ALREADY_SAVED_EMAIL);
+
 
         member.setEmail(newEmail);
         Member save = memberRepository.save(member);

@@ -25,9 +25,9 @@ public class MemberStylingController {
     private final ImageUploadService imageUploadService;
 
     // 담당 스타일리스트 조회
-    @GetMapping("/responsible-stylist")
-    public ResponseEntity<?> findResponsibleStylist(Principal principal) {
-        return ResponseEntity.ok(memberStylingService.findResponsibleStylist(principal.getName()));
+    @GetMapping("/personal-stylist")
+    public ResponseEntity<?> findPersonalStylist(Principal principal) {
+        return ResponseEntity.ok(memberStylingService.findPersonalStylist(principal.getName()));
     }
 
     // 기본 정보 등록
