@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
@@ -21,7 +22,20 @@ public class ServiceApplication {
     @ManyToOne
     private StylistService stylistService;
 
-    @ManyToOne
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
     private Member member;
+
+
+    @ColumnDefault("'WAITING'") // default
+    private String approvalStatus;
+
+    public void approval() {
+        this.approvalStatus = "DONE";
+    }
+
+    public void denial() {
+        this.approvalStatus = "DENY";
+    }
 
 }
