@@ -1,5 +1,7 @@
 package com.apptive.marico.service.styling;
 
+import com.apptive.marico.dto.styling.MyClientDto;
+import com.apptive.marico.dto.styling.MyClientMemberDto;
 import com.apptive.marico.dto.styling.payment.PaymentWaitingDeatilDto;
 import com.apptive.marico.dto.styling.payment.PaymentWaitingDto;
 import com.apptive.marico.dto.styling.payment.PaymentWaitingMemberDto;
@@ -22,11 +24,21 @@ public class StylistStylingService {
     private final StylistRepository stylistRepository;
     private final ServiceApplicationRepository serviceApplicationRepository;
 
-    @Transactional
-    public String findResponsibleStylist(String userId) {
-        Member member = memberRepository.findByUserId(userId)
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
-        return null;
+
+    public MyClientDto findMyClient(String userId) {
+        Stylist stylist = stylistRepository.findByUserId(userId).orElseThrow(
+                () -> new CustomException(USER_NOT_FOUND));
+
+        List<MyClientMemberDto> myClientDtos = new ArrayList<>();
+        for (StylistService stylistService : stylist.getStylistServices()) {
+            List<ServiceApplication> serviceApplications = serviceApplicationRepository.findByStylistService(stylistService);
+            for (ServiceApplication serviceApplication : serviceApplications) {
+                if (serviceApplication.getApprovalStatus().equals("DONE")) {
+                    myClientDtos.add(MyClientMemberDto.toDto(serviceApplication.getMember()));
+                }
+            }
+        }
+        return MyClientDto.toDto(myClientDtos);
     }
 
     public PaymentWaitingDto findPaymentWaitingList(String userId) {

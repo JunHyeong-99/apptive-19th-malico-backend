@@ -13,6 +13,12 @@ import java.security.Principal;
 @RequiredArgsConstructor
 public class StylistStylingController {
     private final StylistStylingService stylistStylingService;
+
+    // 담당 고객 조회
+    @GetMapping("/")
+    public ResponseEntity<?> findMyClient(Principal principal) {
+        return ResponseEntity.ok(stylistStylingService.findMyClient(principal.getName()));
+    }
     // 결제 승인 조회
     @GetMapping("/payment")
     public ResponseEntity<?> findPaymentWaitingList(Principal principal){
