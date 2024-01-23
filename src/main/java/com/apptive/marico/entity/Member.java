@@ -69,6 +69,9 @@ public class Member implements UserDetails {
 
     private String accountHolder;
 
+    @OneToOne(mappedBy = "member")
+    private ServiceApplication serviceApplication;
+
     @ManyToMany
     @JoinTable(
             name = "member_style",

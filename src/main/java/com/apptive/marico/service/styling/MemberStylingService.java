@@ -1,19 +1,17 @@
 package com.apptive.marico.service.styling;
 
 import com.apptive.marico.dto.styling.MemberBasicInformationDto;
+import com.apptive.marico.dto.styling.PersonalStylistDto;
 import com.apptive.marico.entity.*;
 import com.apptive.marico.exception.CustomException;
-import com.apptive.marico.repository.MemberRepository;
-import com.apptive.marico.repository.MyStyleRepository;
-import com.apptive.marico.repository.ReferenceImageRepository;
-import com.apptive.marico.repository.StyleRepository;
+import com.apptive.marico.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.apptive.marico.exception.ErrorCode.*;
 
@@ -25,12 +23,20 @@ public class MemberStylingService {
     private final StyleRepository styleRepository;
     private final MyStyleRepository myStyleRepository;
     private final ReferenceImageRepository referenceImageRepository;
+    private final ServiceApplicationRepository serviceApplicationRepository;
 
     @Transactional
-    public String findResponsibleStylist(String userId) {
-        Member member = memberRepository.findByUserId(userId)
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
-        return null;
+    public PersonalStylistDto findPersonalStylist(String userId) {
+        Member member = memberRepository.findByUserId(userId).orElseThrow(
+                () -> new CustomException(USER_NOT_FOUND));
+
+        ServiceApplication serviceApplication = serviceApplicationRepository.findByMember(member).orElseThrow(
+                () -> new CustomException(NO_PERSONAL_STYLIST));
+
+        if (serviceApplication.getApprovalStatus().equals("DONE")) {
+            return PersonalStylistDto.toDto(serviceApplication.getStylistService().getStylist());
+        } else
+            throw new CustomException(NO_PERSONAL_STYLIST);
     }
 
 
