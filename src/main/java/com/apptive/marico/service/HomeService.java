@@ -2,12 +2,10 @@ package com.apptive.marico.service;
 
 import com.apptive.marico.dto.AccountDto;
 import com.apptive.marico.dto.ServiceApplicationDto;
+import com.apptive.marico.dto.stylist.FilterStyleDto;
 import com.apptive.marico.dto.stylist.StylistDetailDto;
 import com.apptive.marico.dto.stylistService.StylistFilterDto;
-import com.apptive.marico.entity.Member;
-import com.apptive.marico.entity.ServiceApplication;
-import com.apptive.marico.entity.Stylist;
-import com.apptive.marico.entity.StylistService;
+import com.apptive.marico.entity.*;
 import com.apptive.marico.exception.CustomException;
 import com.apptive.marico.repository.MemberRepository;
 import com.apptive.marico.repository.ServiceApplicationRepository;
@@ -17,12 +15,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import static com.apptive.marico.exception.ErrorCode.SERVICE_NOT_FOUND;
 import static com.apptive.marico.exception.ErrorCode.USER_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class HomeService {
 
     private final StylistRepository stylistRepository;
@@ -30,8 +34,18 @@ public class HomeService {
     private final StylistServiceRepository stylistServiceRepository;
     private final ServiceApplicationRepository serviceApplicationRepository;
 
-    public String filter(StylistFilterDto stylistFilterDto) {
-        return "0";
+    public List<FilterStyleDto> filter(StylistFilterDto stylistFilterDto) {
+        List<Style> filteredStyle = stylistRepository.findAllWithStyle().stream()
+                .filter(stylist ->
+                        (stylistFilterDto.getGender() == null || Objects.equals(String.valueOf(stylist.getGender()), stylistFilterDto.getGender())) &&
+                                (stylistFilterDto.getCity() == null || Objects.equals(stylist.getCity(), stylistFilterDto.getCity()))
+                )
+                .flatMap(stylist -> stylist.getStyles().stream())
+                .filter(style -> stylistFilterDto.getStyle() == null || Objects.equals(style.getCategory(), stylistFilterDto.getStyle()))
+                .toList();
+
+        return filteredStyle.stream().map(FilterStyleDto::toDto).collect(Collectors.toList());
+
     }
 
     public StylistDetailDto stylistDetail(Long stylistId) {
@@ -62,6 +76,7 @@ public class HomeService {
                 .build();
     }
 
+    @Transactional
     public String addApplication(String userId, Long serviceId) {
         Member member = memberRepository.findByUserId(userId)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));

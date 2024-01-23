@@ -3,6 +3,7 @@ package com.apptive.marico.controller;
 
 import com.apptive.marico.dto.stylistService.StylistFilterDto;
 import com.apptive.marico.service.HomeService;
+import com.apptive.marico.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +35,7 @@ public class HomeController {
     // 스타일리스트 서비스 신청 하기
     @PostMapping("/member/application/{service_id}")
     public ResponseEntity<?> addRequestService(Principal principal, @PathVariable Long service_id) {
-        return ResponseEntity.ok(homeService.loadApplication(principal.getName(), service_id));
+        return ResponseEntity.ok(ApiUtils.success(homeService.addApplication(principal.getName(), service_id)));
     }
 
 }
