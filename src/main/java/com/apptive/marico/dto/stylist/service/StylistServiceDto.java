@@ -16,19 +16,17 @@ public class StylistServiceDto {
     private String serviceName;
     private String serviceDescription;
 
-    private List<ServiceCategoryDto> serviceCategoryDtoList = new ArrayList<>();
+    private ServiceCategoryDto serviceCategoryDto;
     private int price;
 
     public static StylistServiceDto toDto(StylistService stylistService) {
-        List<ServiceCategoryDto> categoryDtoList = stylistService.getServiceCategory().stream()
-                .map(ServiceCategoryDto::toDto)
-                .toList();
 
+        ServiceCategoryDto categoryDto = ServiceCategoryDto.toDto(stylistService.getServiceCategory());
         return StylistServiceDto.builder()
                 .service_id(stylistService.getId())
                 .serviceName(stylistService.getServiceName())
                 .serviceDescription(stylistService.getServiceDescription())
-                .serviceCategoryDtoList(categoryDtoList)
+                .serviceCategoryDto(categoryDto)
                 .price(stylistService.getPrice())
                 .build();
     }
