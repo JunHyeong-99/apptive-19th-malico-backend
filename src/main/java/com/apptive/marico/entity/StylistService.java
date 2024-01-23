@@ -28,8 +28,8 @@ public class StylistService {
 
     private int price;
 
-    @OneToMany(mappedBy = "stylistService", cascade = CascadeType.REMOVE)
-    private List<ServiceCategory> serviceCategory = new ArrayList<>();
+    @OneToOne(mappedBy = "stylistService", cascade = CascadeType.REMOVE)
+    private ServiceCategory serviceCategory;
 
     @ManyToOne
     @JoinColumn(name = "stylist_id")

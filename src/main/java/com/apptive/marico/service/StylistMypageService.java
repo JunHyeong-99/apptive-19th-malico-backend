@@ -93,7 +93,7 @@ public class StylistMypageService {
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
         if (serviceRepository.countByStylist_id(stylist.getId()) >= 5) throw new CustomException(TOO_MANY_SERVICES);
 
-        List<ServiceCategoryDto> serviceCategoryDtoList = stylistServiceDto.getServiceCategoryDtoList();
+
         StylistService stylistService = StylistService.builder()
                 .serviceName(stylistServiceDto.getServiceName())
                 .serviceDescription(stylistServiceDto.getServiceDescription())
@@ -101,9 +101,7 @@ public class StylistMypageService {
                 .stylist(stylist)
                 .build();
         serviceRepository.save(stylistService);
-        for (ServiceCategoryDto serviceCategoryDto : serviceCategoryDtoList) {
-            addServiceCategory(serviceCategoryDto, stylistService);
-        }
+        addServiceCategory(stylistServiceDto.getServiceCategoryDto(), stylistService);
         return "서비스가 등록되었습니다.";
     }
 
@@ -139,11 +137,9 @@ public class StylistMypageService {
         if (!Objects.equals(stylistService.get().getStylist(), stylist.get())) throw new CustomException(STYLIST_NOT_MATCH_SERVICE);
 
         serviceCategoryRepository.deleteAllByStylistService(stylistService.get());
-        List<ServiceCategoryDto> serviceCategoryDtoList = stylistServiceDto.getServiceCategoryDtoList();
 
-        serviceCategoryDtoList.stream()
-                .map(categoryDto-> createServiceCategory(categoryDto, stylistService.get()))
-                .forEach(serviceCategoryRepository::save);
+        ServiceCategoryDto serviceCategoryDto = stylistServiceDto.getServiceCategoryDto();
+        serviceCategoryRepository.save(createServiceCategory(serviceCategoryDto, stylistService.get()));
         stylistService.get().editService(stylistServiceDto);
         return "서비스가 수정되었습니다.";
     }

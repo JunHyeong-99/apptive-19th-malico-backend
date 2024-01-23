@@ -25,7 +25,7 @@ public class ServiceCategory {
 
     private String categoryDescription;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "service_id")
     private StylistService stylistService;
 }
