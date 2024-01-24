@@ -17,7 +17,7 @@ public class HomeController {
 
     private final HomeService homeService;
     @PostMapping("/filter")
-    public ResponseEntity<?> stylistFilter(@RequestBody StylistFilterDto stylistFilterDto) {
+    public ResponseEntity<?> stylistFilter(@RequestParam StylistFilterDto stylistFilterDto) {
         return ResponseEntity.ok(homeService.filter(stylistFilterDto));
     }
 
