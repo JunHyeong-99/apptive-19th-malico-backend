@@ -1,5 +1,6 @@
 package com.apptive.marico.dto.stylist;
 
+import com.apptive.marico.entity.City;
 import com.apptive.marico.entity.Gender;
 import com.apptive.marico.entity.Member;
 import com.apptive.marico.entity.Stylist;
@@ -38,6 +39,7 @@ public class StylistRequestDto {
                 .gender(Gender.fromDisplayName(String.valueOf(gender)))
                 .birthDate(birthDate)
                 .profileImage(profile_image)
+                .city(City.fromDisplayName("모든 지역"))
                 .build();
     }
 

@@ -23,7 +23,7 @@ public class MemberRequestDto {
     private String nickname;
     private char gender;
     private LocalDate birthDate;
-    private String city;
+    private String city = "모든 지역";
     private String profile_image;
 
 

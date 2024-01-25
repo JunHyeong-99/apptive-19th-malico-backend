@@ -4,14 +4,14 @@ spring:
       - classpath:/application-jwt-secret.yml
       - classpath:/application-s3.yml
       - classpath:/application-db.yml
-  h2:
-    console:
-      enabled: true
-  datasource:
-    url: jdbc:mysql://127.0.0.1:3306/marico
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: 1234
+#  h2:
+#    console:
+#      enabled: true
+#  datasource:
+#    url: jdbc:mysql://127.0.0.1:3306/marico
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    username: root
+#    password: 1234
   jpa:
     hibernate:
       ddl-auto: update
