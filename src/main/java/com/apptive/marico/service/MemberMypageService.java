@@ -9,6 +9,7 @@ import com.apptive.marico.dto.mypage.member.MemberMypageDto;
 import com.apptive.marico.dto.mypage.member.LikedStylistDto;
 import com.apptive.marico.dto.mypage.member.LikedStylistListDto;
 import com.apptive.marico.dto.mypage.member.MemberMypageEditDto;
+import com.apptive.marico.entity.Gender;
 import com.apptive.marico.entity.Like;
 import com.apptive.marico.entity.Member;
 import com.apptive.marico.entity.Stylist;
@@ -91,7 +92,7 @@ public class MemberMypageService {
 
         if (memberMypageEditDto.getNickname() != null)
             updateMember.setNickname(memberMypageEditDto.getNickname());
-        if (memberMypageEditDto.getGender() != 0) updateMember.setGender(memberMypageEditDto.getGender());
+        if (memberMypageEditDto.getGender() != 0) updateMember.setGender(Gender.fromDisplayName(String.valueOf(memberMypageEditDto.getGender())));
         if (memberMypageEditDto.getBirthDate() != null)
             updateMember.setBirthDate(memberMypageEditDto.getBirthDate());
 

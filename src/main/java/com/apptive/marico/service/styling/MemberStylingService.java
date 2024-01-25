@@ -58,7 +58,7 @@ public class MemberStylingService {
             newPreferredStyles.add(style);
         }
         member.setPreferredStyles(newPreferredStyles);
-        member.setCity(memberBasicInformationDto.getCity());
+        member.setCity(City.fromDisplayName(memberBasicInformationDto.getCity()));
         member.setState(memberBasicInformationDto.getState());
         member.setBodyShapeImages(memberBasicInformationDto.getBodyShapeImage());
 

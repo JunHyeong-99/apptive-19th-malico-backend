@@ -32,7 +32,7 @@ public class PaymentWaitingDeatilDto {
                 .connectionType(null)
                 .serviceType(null)
                 .preferredStyleCategories(preferredStyleCategories)
-                .city(member.getCity())
+                .city(member.getCity().getDisplayName())
                 .state(member.getState())
                 .build();
     }

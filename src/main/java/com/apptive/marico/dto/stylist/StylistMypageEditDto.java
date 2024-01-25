@@ -3,6 +3,7 @@ package com.apptive.marico.dto.stylist;
 
 import com.apptive.marico.dto.CareerDto;
 import com.apptive.marico.entity.Career;
+import com.apptive.marico.entity.City;
 import com.apptive.marico.entity.Stylist;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,7 +31,7 @@ public class StylistMypageEditDto {
                 .stageName(stylist.getStageName())
                 .oneLineIntroduction(stylist.getOneLineIntroduction())
                 .stylistIntroduction(stylist.getStylistIntroduction())
-                .city(stylist.getCity())
+                .city(stylist.getCity().getDisplayName())
                 .state(stylist.getState())
                 .chat_link(stylist.getChat_link())
                 .careerDtoList(stylist.getCareer().stream()

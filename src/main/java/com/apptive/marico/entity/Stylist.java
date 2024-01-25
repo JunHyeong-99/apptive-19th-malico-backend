@@ -44,12 +44,14 @@ public class Stylist implements UserDetails {
     @Column(nullable = false)
     private String nickname;
 
-    @Column(nullable = false)
-    private char gender;
-
     private LocalDate birthDate;
 
-    private String city;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Gender gender;
+
+    @Enumerated(EnumType.STRING)
+    private City city;
 
     private String state;
 
@@ -96,7 +98,7 @@ public class Stylist implements UserDetails {
         this.setStageName(stylistMypageEditDto.getStageName());
         this.setOneLineIntroduction(stylistMypageEditDto.getOneLineIntroduction());
         this.setStylistIntroduction(stylistMypageEditDto.getStylistIntroduction());
-        this.setCity(stylistMypageEditDto.getCity());
+        this.setCity(City.fromDisplayName(stylistMypageEditDto.getCity()));
         this.setState(stylistMypageEditDto.getState());
         this.setChat_link(stylistMypageEditDto.getChat_link());
     }

@@ -16,8 +16,8 @@ import java.security.Principal;
 public class HomeController {
 
     private final HomeService homeService;
-    @GetMapping("/filter")
-    public ResponseEntity<?> stylistFilter(@RequestParam StylistFilterDto stylistFilterDto) {
+    @PostMapping("/filter")
+    public ResponseEntity<?> stylistFilter(@RequestBody StylistFilterDto stylistFilterDto) {
         return ResponseEntity.ok(homeService.filter(stylistFilterDto));
     }
 

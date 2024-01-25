@@ -1,5 +1,7 @@
 package com.apptive.marico.dto.mypage.member;
 
+import com.apptive.marico.entity.City;
+import com.apptive.marico.entity.Gender;
 import com.apptive.marico.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,9 +36,9 @@ public class MemberRequestDto {
                 .email(email)
                 .password(passwordEncoder.encode(password))
                 .nickname(nickname)
-                .gender(gender)
+                .gender(Gender.fromDisplayName(String.valueOf(gender)))
                 .birthDate(birthDate)
-                .city(city)
+                .city(City.fromDisplayName(city))
                 .profileImage(profile_image)
                 .build();
     }

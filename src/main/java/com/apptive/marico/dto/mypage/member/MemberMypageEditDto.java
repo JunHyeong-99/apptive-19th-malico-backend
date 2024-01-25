@@ -24,7 +24,7 @@ public class MemberMypageEditDto {
     public static MemberMypageEditDto toDto(Member member) {
         return MemberMypageEditDto.builder()
                 .nickname(member.getNickname())
-                .gender(member.getGender())
+                .gender(member.getGender().getDisplayName().charAt(0))
                 .email(member.getEmail())
                 .birthDate(member.getBirthDate())
                 .build();

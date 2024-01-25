@@ -98,7 +98,7 @@ public class MemberMypageController {
     }
 
     @GetMapping("/delete")
-    public ResponseEntity<?> checkPasswordForDelete(Principal principal, @RequestParam PasswordDto passwordDto) {
+    public ResponseEntity<?> checkPasswordForDelete(Principal principal, @RequestBody PasswordDto passwordDto) {
         return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(memberMyPageService.CheckCurrentPassword(principal.getName(), passwordDto.getPassword())));
     }
 

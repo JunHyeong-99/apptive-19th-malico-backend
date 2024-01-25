@@ -43,13 +43,14 @@ public class Member implements UserDetails {
     @Column(nullable = false)
     private String nickname;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private char gender;
+    private Gender gender;
+
+    @Enumerated(EnumType.STRING)
+    private City city;
 
     private LocalDate birthDate;
-
-    // 도시
-    private String city; // 필수
 
     // 구
     private String state; // 필수

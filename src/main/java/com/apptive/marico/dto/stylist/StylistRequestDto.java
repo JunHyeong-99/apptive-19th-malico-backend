@@ -1,5 +1,6 @@
 package com.apptive.marico.dto.stylist;
 
+import com.apptive.marico.entity.Gender;
 import com.apptive.marico.entity.Member;
 import com.apptive.marico.entity.Stylist;
 import lombok.AllArgsConstructor;
@@ -34,7 +35,7 @@ public class StylistRequestDto {
                 .email(email)
                 .password(passwordEncoder.encode(password))
                 .nickname(nickname)
-                .gender(gender)
+                .gender(Gender.fromDisplayName(String.valueOf(gender)))
                 .birthDate(birthDate)
                 .profileImage(profile_image)
                 .build();

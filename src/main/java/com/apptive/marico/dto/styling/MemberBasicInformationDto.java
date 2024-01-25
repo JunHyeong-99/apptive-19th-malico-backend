@@ -43,7 +43,7 @@ public class MemberBasicInformationDto {
                 .height(member.getHeight())
                 .weight(member.getWeight())
                 .preferredStyles(preferredStyleIds)
-                .city(member.getCity())
+                .city(member.getCity().getDisplayName())
                 .state(member.getState())
                 .bodyShapeImage(member.getBodyShapeImages())
                 .myStyles(myStyleUrls)

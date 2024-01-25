@@ -28,7 +28,7 @@ public class StylistDetailDto {
                 .stageName(stylist.getStageName())
                 .oneLineIntroduction(stylist.getOneLineIntroduction())
                 .stylistIntroduction(stylist.getStylistIntroduction())
-                .city(stylist.getCity())
+                .city(stylist.getCity().getDisplayName())
                 .state(stylist.getState())
                 .styleDtoList(stylist.getStyles().stream()
                         .map(StyleDto::toDto)
