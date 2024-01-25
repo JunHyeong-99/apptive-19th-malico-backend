@@ -2,16 +2,13 @@ package com.apptive.marico.entity;
 
 import com.apptive.marico.dto.stylist.service.StylistServiceDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -31,7 +28,7 @@ public class StylistService {
     @OneToOne(mappedBy = "stylistService", cascade = CascadeType.REMOVE)
     private ServiceCategory serviceCategory;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stylist_id")
     private Stylist stylist;
 
