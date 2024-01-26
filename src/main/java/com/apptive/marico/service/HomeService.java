@@ -7,10 +7,7 @@ import com.apptive.marico.dto.stylist.StylistDetailDto;
 import com.apptive.marico.dto.stylistService.StylistFilterDto;
 import com.apptive.marico.entity.*;
 import com.apptive.marico.exception.CustomException;
-import com.apptive.marico.repository.MemberRepository;
-import com.apptive.marico.repository.ServiceApplicationRepository;
-import com.apptive.marico.repository.StylistRepository;
-import com.apptive.marico.repository.StylistServiceRepository;
+import com.apptive.marico.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,11 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.apptive.marico.exception.ErrorCode.SERVICE_NOT_FOUND;
-import static com.apptive.marico.exception.ErrorCode.USER_NOT_FOUND;
+import static com.apptive.marico.exception.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +30,7 @@ public class HomeService {
     private final MemberRepository memberRepository;
     private final StylistServiceRepository stylistServiceRepository;
     private final ServiceApplicationRepository serviceApplicationRepository;
+    private final StyleRepository styleRepository;
 
     public List<FilterStyleDto> filter(StylistFilterDto stylistFilterDto) {
         List<Style> filteredStyle = stylistRepository.findAllWithStyle().stream()
@@ -48,10 +46,16 @@ public class HomeService {
 
     }
 
-    public StylistDetailDto stylistDetail(Long stylistId) {
+    public StylistDetailDto stylistDetailByStylist(Long stylistId) {
         Stylist stylist = stylistRepository.findByIdWithService(stylistId)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
         return StylistDetailDto.toDto(stylist);
+    }
+
+    public StylistDetailDto stylistDetailByStyle(Long styleId) {
+        Style style = styleRepository.findById(styleId)
+                .orElseThrow(() -> new CustomException(STYLE_NOT_FOUND));
+        return StylistDetailDto.toDto(style.getStylist());
     }
 
     public ServiceApplicationDto loadApplication(String userId, Long serviceId) {
