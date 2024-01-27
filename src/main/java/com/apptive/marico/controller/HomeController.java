@@ -26,10 +26,15 @@ public class HomeController {
                 .build()));
     }
 
-    // 스타일리스트 상세 페이지 조회
+    // 스타일리스트 id로 스타일리스트 상세 페이지 조회
     @GetMapping("/stylist/{stylist_id}")
-    public ResponseEntity<?> stylistDetail(@PathVariable Long stylist_id) {
-        return ResponseEntity.ok(homeService.stylistDetail(stylist_id));
+    public ResponseEntity<?> stylistDetailByStylist(@PathVariable Long stylist_id) {
+        return ResponseEntity.ok(homeService.stylistDetailByStylist(stylist_id));
+    }
+    // 스타일 id로 스타일리스트 상세 페이지 조회
+    @GetMapping("/stylist/style/{style_id}")
+    public ResponseEntity<?> stylistDetailByStyle(@PathVariable Long style_id) {
+        return ResponseEntity.ok(homeService.stylistDetailByStyle(style_id));
     }
 
     // 스타일리스트 서비스 신청 조회
