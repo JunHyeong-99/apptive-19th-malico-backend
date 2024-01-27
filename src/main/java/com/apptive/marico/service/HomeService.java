@@ -37,11 +37,11 @@ public class HomeService {
     public List<FilterStyleDto> filter(StylistFilterDto stylistFilterDto) {
         List<Style> filteredStyle = stylistRepository.findAllWithStyle().stream()
                 .filter(stylist ->
-                        (stylistFilterDto.getGender() == null || Objects.equals(String.valueOf(stylist.getGender()), stylistFilterDto.getGender())) &&
-                                (stylistFilterDto.getCity() == null || Objects.equals(stylist.getCity(), stylistFilterDto.getCity()))
+                        (Objects.equals(stylistFilterDto.getGender(), "All") || Objects.equals(String.valueOf(stylist.getGender()), stylistFilterDto.getGender())) &&
+                                (Objects.equals(stylistFilterDto.getCity(), "All") || Objects.equals(stylist.getCity(), stylistFilterDto.getCity()))
                 )
                 .flatMap(stylist -> stylist.getStyles().stream())
-                .filter(style -> stylistFilterDto.getStyle() == null || Objects.equals(style.getCategory(), stylistFilterDto.getStyle()))
+                .filter(style -> Objects.equals(stylistFilterDto.getStyle(), "All") || Objects.equals(style.getCategory(), stylistFilterDto.getStyle()))
                 .toList();
 
         return filteredStyle.stream().map(FilterStyleDto::toDto).collect(Collectors.toList());
