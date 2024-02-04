@@ -68,8 +68,8 @@ public class MemberMypageController {
 
     // 현재 비밀번호가 일치한지 검사
     @GetMapping("/password")
-    public ResponseEntity<ApiSuccess<Object>> checkCurrentPassword(Principal principal, @RequestBody PasswordDto passwordDto) {
-        return ResponseEntity.ok(new ApiSuccess<>(memberMyPageService.CheckCurrentPassword(principal.getName(), passwordDto.getPassword())));
+    public ResponseEntity<ApiSuccess<Object>> checkCurrentPassword(Principal principal, @RequestParam String password) {
+        return ResponseEntity.ok(new ApiSuccess<>(memberMyPageService.CheckCurrentPassword(principal.getName(), password)));
     }
     // 비밀번호 변경
     @PatchMapping("/password")
@@ -98,8 +98,8 @@ public class MemberMypageController {
     }
 
     @GetMapping("/delete")
-    public ResponseEntity<?> checkPasswordForDelete(Principal principal, @RequestBody PasswordDto passwordDto) {
-        return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(memberMyPageService.CheckCurrentPassword(principal.getName(), passwordDto.getPassword())));
+    public ResponseEntity<?> checkPasswordForDelete(Principal principal, @RequestParam String password) {
+        return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(memberMyPageService.CheckCurrentPassword(principal.getName(), password)));
     }
 
     @DeleteMapping("/delete")

@@ -104,8 +104,8 @@ public class StylistMypageController {
     }
 
     @GetMapping("/delete")
-    public ResponseEntity<?> checkPasswordForDelete(Principal principal, @RequestBody PasswordDto passwordDto) {
-        return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(stylistMypageService.CheckCurrentPassword(principal.getName(), passwordDto.getPassword())));
+    public ResponseEntity<?> checkPasswordForDelete(Principal principal, @RequestParam String password) {
+        return ResponseEntity.ok(new ApiUtils.ApiSuccess<>(stylistMypageService.CheckCurrentPassword(principal.getName(), password)));
     }
 
     @DeleteMapping("/delete")

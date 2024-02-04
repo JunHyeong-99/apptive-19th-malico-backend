@@ -2,6 +2,7 @@ package com.apptive.marico.controller;
 
 
 import com.apptive.marico.dto.stylistService.StylistFilterDto;
+import com.apptive.marico.entity.Stylist;
 import com.apptive.marico.service.HomeService;
 import com.apptive.marico.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
@@ -16,9 +17,13 @@ import java.security.Principal;
 public class HomeController {
 
     private final HomeService homeService;
-    @PostMapping("/filter")
-    public ResponseEntity<?> stylistFilter(@RequestBody StylistFilterDto stylistFilterDto) {
-        return ResponseEntity.ok(homeService.filter(stylistFilterDto));
+    @GetMapping("/filter")
+    public ResponseEntity<?> stylistFilter(@RequestParam(defaultValue = "All") String gender, @RequestParam(defaultValue = "All") String city, @RequestParam(defaultValue = "All") String  style) {
+        return ResponseEntity.ok(homeService.filter(StylistFilterDto.builder()
+                .gender(gender)
+                .city(city)
+                .style(style)
+                .build()));
     }
 
     // 스타일리스트 id로 스타일리스트 상세 페이지 조회
